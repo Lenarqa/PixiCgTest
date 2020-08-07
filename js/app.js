@@ -58,7 +58,7 @@ function createMap(players){
 
     analizHorizontalMap();
     analizVerticalMap();
-    analizHorizontalMap(); //уменьшаем вероятность появления 3 на карте.
+    analizHorizontalMap(); //уменьшаем вероятность появления на карте тройки.
 }
 
 function clickFunction(player){
@@ -73,15 +73,19 @@ function clickFunction(player){
 
             console.log(`Выбран второй объект id = ${player.id}, i = ${player.i}, j = ${player.j}`);
             if(isNear(tempObj, player) && isThree(tempObj, player)){
-                console.log("Is near or is not Three");
+                console.log("Is near");
                 
                 playAnimationMove(tempObj, player);
                 changeIandJ(tempObj, player);
-                // swapObjCoordinats(tempObj, player);
 
             }else{
-                console.log("is not near");
-                killPlayerAnimation(tempObj);
+                if(!isNear(tempObj, player)){
+                    console.log("is not near");
+                    killPlayerAnimation(tempObj);
+                }else{
+                    console.log("or is not Three");
+                    badStepAnimation(tempObj, player);
+                }
             }
                       
             break;
@@ -139,6 +143,26 @@ function swapObjs(tempObj, player, tempPlayersId){
     return tempPlayersId;
 }
 
+function changeIandJ(tempObj, player){
+    let i = tempObj.i;
+    let j = tempObj.j;
+
+    tempObj.i = player.i;
+    tempObj.j = player.j;
+
+    player.i = i;
+    player.j = j;
+}
+
+function isNear(tempObj, player){
+    if((Math.abs(tempObj.i - player.i) == 1) ||  (Math.abs(tempObj.j - player.j) == 1)){
+        if((tempObj.i == player.i) || (tempObj.j == player.j)){
+            return true;
+        }
+    }
+}
+
+// Analiz Functions
 function analizHorizontalMap(){
     for (let i = 0; i < MAP_SIZE; i++) {
         for (let j = 2; j < MAP_SIZE; j++) {
@@ -163,25 +187,7 @@ function analizVerticalMap(){
     }
 }
 
-function changeIandJ(tempObj, player){
-    let i = tempObj.i;
-    let j = tempObj.j;
-
-    tempObj.i = player.i;
-    tempObj.j = player.j;
-
-    player.i = i;
-    player.j = j;
-}
-
-function isNear(tempObj, player){
-    if((Math.abs(tempObj.i - player.i) == 1) ||  (Math.abs(tempObj.j - player.j) == 1)){
-        if((tempObj.i == player.i) || (tempObj.j == player.j)){
-            return true;
-        }
-    }
-}
-
+// Animations
 function playAnimationMove(tempObj, player){
     let playerLastX = player.x;
     let playerLastY = player.y;
@@ -191,13 +197,13 @@ function playAnimationMove(tempObj, player){
     
     if((tempObj.j - player.j) == -1){
         console.log("PLAY RIGHT");
-        player.Animation = new TweenMax.to(player, 1, {
+        player.Animation = new TweenMax.to(player, 0.5, {
             x: tempObjLastX, 
             ease: Power3.easeOut
         });
 
         killPlayerAnimation(tempObj);
-        tempObj.Animation = new TweenMax.to(tempObj, 1, {
+        tempObj.Animation = new TweenMax.to(tempObj, 0.5, {
             x: playerLastX, 
             ease: Power3.easeOut
         });
@@ -205,69 +211,159 @@ function playAnimationMove(tempObj, player){
         // killPlayerAnimation(players[player.i][player.j].Animation);
     }else if((tempObj.j - player.j) == 1){
         console.log("PLAY LEFT");
-        player.Animation = new TweenMax.to(player, 1, {
+        player.Animation = new TweenMax.to(player, 0.5, {
             x: tempObj.x, 
             ease: Power3.easeOut
         });
 
         killPlayerAnimation(tempObj);
-        tempObj.Animation = new TweenMax.to(tempObj, 1, {
+        tempObj.Animation = new TweenMax.to(tempObj, 0.5, {
             x: playerLastX, 
             ease: Power3.easeOut
         });
     }else if((tempObj.i - player.i) == 1){
         console.log("PLAY TOP");
-        player.Animation = new TweenMax.to(player, 1, {
-            y: tempObj.y, 
+        player.Animation = new TweenMax.to(player, 0.5, {
+            y: tempObjLastY, 
             ease: Power3.easeOut
         });
 
         killPlayerAnimation(tempObj);
-        tempObj.Animation = new TweenMax.to(tempObj, 1, {
+        tempObj.Animation = new TweenMax.to(tempObj, 0.5, {
             y: playerLastY, 
             ease: Power3.easeOut
         });
     }else if((tempObj.i - player.i) == -1){
         console.log("PLAY BOTTOM");
-        player.Animation = new TweenMax.to(player, 1, {
-            y: tempObj.y, 
+        player.Animation = new TweenMax.to(player, 0.5, {
+            y: tempObjLastY, 
             ease: Power3.easeOut
         });
 
         killPlayerAnimation(tempObj);
-        tempObj.Animation = new TweenMax.to(tempObj, 1, {
+        tempObj.Animation = new TweenMax.to(tempObj, 0.5, {
             y: playerLastY, 
             ease: Power3.easeOut
         });
     }
 }
 
-function swapObjCoordinats(tempObj, player){
-    console.log('До обмена')
-    console.log("tempObj: i = " + tempObj.i + " j = " + tempObj.j);
-    console.log("player: i = " + player.i + " j = " + player.j);
+function badStepAnimation(tempObj, player){
+    let playerLastX = player.x;
+    let playerLastY = player.y;
 
-    let tempI = players[tempObj.i][tempObj.j].i;
-    let tempJ = players[tempObj.i][tempObj.j].j;
+    let tempObjLastX = tempObj.x;
+    let tempObjLastY = tempObj.y;
+    
+    if((tempObj.j - player.j) == -1){
+        console.log("PLAY RIGHT bad step");
+        player.Animation = new TweenMax.to(player, 0.5, {
+            x: tempObjLastX, 
+            ease: Power3.easeOut,
+        });
 
-    players[tempObj.i][tempObj.j].i = players[player.i][player.j].i;
-    players[tempObj.i][tempObj.j].j = players[player.i][player.j].j;
+        killPlayerAnimation(tempObj);
+        tempObj.Animation = new TweenMax.to(tempObj, 0.5, {
+            x: playerLastX, 
+            yoyo: true,
+            ease: Power3.easeOut,
+        });
 
+        setTimeout(()=>{
+            player.Animation = new TweenMax.to(player, 0.5, {
+                x: playerLastX, 
+                ease: Power3.easeOut,
+            });
+    
+            tempObj.Animation = new TweenMax.to(tempObj, 0.5, {
+                x: tempObjLastX, 
+                yoyo: true,
+                ease: Power3.easeOut,
+            });
+        }, 500);
+        
+        // killPlayerAnimation(players[player.i][player.j].Animation);
+    }else if((tempObj.j - player.j) == 1){
+        console.log("PLAY LEFT bad step");
+        player.Animation = new TweenMax.to(player, 0.5, {
+            x: tempObj.x, 
+            ease: Power3.easeOut
+        });
 
-    players[player.i][player.j].i = tempI;
-    players[player.i][player.j].j = tempJ;
+        killPlayerAnimation(tempObj);
+        tempObj.Animation = new TweenMax.to(tempObj, 0.5, {
+            x: playerLastX, 
+            ease: Power3.easeOut
+        });
 
+        setTimeout(()=>{
+            player.Animation = new TweenMax.to(player, 0.5, {
+                x: playerLastX, 
+                ease: Power3.easeOut,
+            });
+    
+            tempObj.Animation = new TweenMax.to(tempObj, 0.5, {
+                x: tempObjLastX, 
+                yoyo: true,
+                ease: Power3.easeOut,
+            });
+        }, 500);
+    }else if((tempObj.i - player.i) == 1){
+        console.log("PLAY TOP bad step");
+        player.Animation = new TweenMax.to(player, 0.5, {
+            y: tempObjLastY, 
+            ease: Power3.easeOut
+        });
 
+        killPlayerAnimation(tempObj);
+        tempObj.Animation = new TweenMax.to(tempObj, 0.5, {
+            y: playerLastY, 
+            ease: Power3.easeOut
+        });
 
-    console.log('После обмена')
-    console.log("tempObj: i = " + tempObj.i + " j = " + tempObj.j);
-    console.log("player: i = " + player.i + " j = " + player.j);
+        setTimeout(()=>{
+            player.Animation = new TweenMax.to(player, 0.5, {
+                y: playerLastY, 
+                ease: Power3.easeOut,
+            });
+    
+            tempObj.Animation = new TweenMax.to(tempObj, 0.5, {
+                y: tempObjLastY, 
+                yoyo: true,
+                ease: Power3.easeOut,
+            });
+        }, 500);
 
+    }else if((tempObj.i - player.i) == -1){
+        console.log("PLAY BOTTOM bad step");
+        player.Animation = new TweenMax.to(player, 0.5, {
+            y: tempObjLastY, 
+            ease: Power3.easeOut
+        });
 
+        killPlayerAnimation(tempObj);
+        tempObj.Animation = new TweenMax.to(tempObj, 0.5, {
+            y: playerLastY, 
+            ease: Power3.easeOut
+        });
+
+        setTimeout(()=>{
+            player.Animation = new TweenMax.to(player, 0.5, {
+                y: playerLastY, 
+                ease: Power3.easeOut,
+            });
+    
+            tempObj.Animation = new TweenMax.to(tempObj, 0.5, {
+                y: tempObjLastY, 
+                yoyo: true,
+                ease: Power3.easeOut,
+            });
+        }, 500);
+    }
 }
 
 function playerAnimation(player){
-    player.Animation = new TweenMax.to(player.scale, 0.7, {
+    player.Animation = new TweenMax.to(player.scale, 0.4, {
         x: 1.3, 
         y: 1.3, 
         repeat: -1,
