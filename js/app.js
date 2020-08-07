@@ -58,13 +58,16 @@ function createMap(players){
     }
 
     analizHorizontalMap();
+    analizVerticalMap();
 }
 
 function clickFunction(player){
     
     switch(playerClick){
         case 2:{
-            
+            if(player.i == tempObj.i && player.j == tempObj.j){
+                 killPlayerAnimation(tempObj);
+            }
             playerClick = 1;
             console.log(`Выбран второй объект id = ${player.id}, i = ${player.i}, j = ${player.j}`);
             if(isNear(tempObj, player)){
@@ -75,10 +78,9 @@ function clickFunction(player){
 
             }else{
                 console.log("is not near");
-                killPlayerAnimation(players[tempObj.i][tempObj.j]);
+                killPlayerAnimation(tempObj);
             }
-            
-            
+                      
             break;
         }
         case 1:{
@@ -101,6 +103,10 @@ function analizHorizontalMap(){
             }
         }
     }
+}
+
+function analizVerticalMap(){
+
 }
 
 function changeIandJ(tempObj, player){
