@@ -36,6 +36,7 @@ function createMap(players){
 
         players[i] = [];
         for (let j = 0; j < MAP_SIZE; j++) {
+            
             let random = Math.floor(Math.random() * 3); 
             players[i][j] = new PIXI.Sprite.from(colors[random]);
             players[i][j].interactive = true;
@@ -56,7 +57,7 @@ function createMap(players){
         x  = 10;
     }
 
-    return players;
+    analizHorizontalMap();
 }
 
 function clickFunction(player){
@@ -88,6 +89,18 @@ function clickFunction(player){
             break;
         }
     } 
+}
+
+function analizHorizontalMap(){
+    for (let i = 0; i < MAP_SIZE; i++) {
+        for (let j = 2; j < MAP_SIZE; j++) {
+            if((players[i][j].id == players[i][j-1].id) && (players[i][j].id == players[i][j-2].id)){
+                let newId = (players[i][j].id + 1 < colors.length - 1 ? players[i][j].id + 1 : players[i][j].id - 1);
+                players[i][j].texture = PIXI.Texture.from(colors[newId]);
+                players[i][j].id = newId;
+            }
+        }
+    }
 }
 
 function changeIandJ(tempObj, player){
