@@ -59,6 +59,7 @@ function createMap(players){
 
     analizHorizontalMap();
     analizVerticalMap();
+    analizHorizontalMap(); //уменьшаем вероятность появления 3 на карте.
 }
 
 function clickFunction(player){
@@ -106,7 +107,15 @@ function analizHorizontalMap(){
 }
 
 function analizVerticalMap(){
-
+    for (let i = 0; i < MAP_SIZE; i++) {
+        for (let j = 2; j < MAP_SIZE; j++) {
+            if((players[j][i].id == players[j-1][i].id) && (players[j][i].id == players[j-2][i].id)){
+                let newId = (players[j][i].id + 1 < colors.length - 1 ? players[j][i].id + 1 : players[j][i].id - 1);
+                players[j][i].texture = PIXI.Texture.from(colors[newId]);
+                players[j][i].id = newId;
+            }
+        }
+    }
 }
 
 function changeIandJ(tempObj, player){
