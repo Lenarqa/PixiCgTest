@@ -21,7 +21,6 @@ window.onload = function(){
 
     createMap(players, colors); 
 
-
     let idArray = [];
 
     // document.body.appendChild(app.view);
@@ -66,13 +65,16 @@ function clickFunction(player){
     
     switch(playerClick){
         case 2:{
+            playerClick = 1;
+            
             if(player.i == tempObj.i && player.j == tempObj.j){
                  killPlayerAnimation(tempObj);
             }
-            playerClick = 1;
+
             console.log(`Выбран второй объект id = ${player.id}, i = ${player.i}, j = ${player.j}`);
-            if(isNear(tempObj, player)){
-                console.log("Is near")
+            if(isNear(tempObj, player) && isThree(tempObj, player)){
+                console.log("Is near or is not Three");
+                
                 playAnimationMove(tempObj, player);
                 changeIandJ(tempObj, player);
                 // swapObjCoordinats(tempObj, player);
@@ -92,6 +94,49 @@ function clickFunction(player){
             break;
         }
     } 
+}
+
+function isThree(tempObj, player){
+    let col = 0;
+    let tempPlayersId = players.map(function(arr) {
+        return arr.map(el =>{
+            return el.id;
+        });
+    });
+    
+    tempPlayersId = swapObjs(tempObj, player, tempPlayersId);
+
+    for (let i = 0; i < tempPlayersId.length; i++) {
+        for (let j = 0; j < tempPlayersId[i].length; j++) {
+            if(tempPlayersId[i][j] == tempPlayersId[i][j+1] && tempPlayersId[i][j] == tempPlayersId[i][j+2]){
+                col++;
+            }
+        }
+    }
+
+    for (let i = 0; i < tempPlayersId.length; i++) {
+        for (let j = 0; j < tempPlayersId[i].length-2; j++) {
+            if(tempPlayersId[j][i] == tempPlayersId[j+1][i] && tempPlayersId[j][i] == tempPlayersId[j+2][i]){
+                col++;
+            }
+        }
+    }
+
+    if(col > 0){
+        return true;
+    }else{
+        return false;
+    }
+}
+
+function swapObjs(tempObj, player, tempPlayersId){   
+    let tempID = tempPlayersId[player.i][player.j];  
+    console.log("tempID "+ tempID)
+    
+    tempPlayersId[player.i][player.j] = tempPlayersId[tempObj.i][tempObj.j];
+    tempPlayersId[tempObj.i][tempObj.j] = tempID;
+
+    return tempPlayersId;
 }
 
 function analizHorizontalMap(){
