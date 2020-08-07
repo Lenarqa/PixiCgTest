@@ -21,6 +21,9 @@ window.onload = function(){
 
     createMap(players, colors); 
 
+
+    let idArray = [];
+
     // document.body.appendChild(app.view);
     container.appendChild(app.view);
 }
@@ -41,6 +44,7 @@ function createMap(players){
             players[i][j].i = i;
             players[i][j].j = j;
             players[i][j].id = random;
+            players[i][j].Animation = null;
             
             players[i][j].on('pointerdown', clickFunction.bind(this, players[i][j]));
             
@@ -59,30 +63,42 @@ function clickFunction(player){
     
     switch(playerClick){
         case 2:{
-            playerClick++;
+            
+            playerClick = 1;
             console.log(`Выбран второй объект id = ${player.id}, i = ${player.i}, j = ${player.j}`);
             if(isNear(tempObj, player)){
-                
+                console.log("Is near")
                 playAnimationMove(tempObj, player);
+                changeIandJ(tempObj, player);
+                // swapObjCoordinats(tempObj, player);
+
             }else{
                 console.log("is not near");
                 killPlayerAnimation(players[tempObj.i][tempObj.j]);
             }
             
-            playerClick = 1;
+            
             break;
         }
         case 1:{
             playerClick++;
             console.log(`Выбран первый объект id = ${player.id}, i = ${player.i}, j = ${player.j}`);
-            // tempObj.i = player.i;
-            // tempObj.j = player.j;
             tempObj = player;
-
-            playerAnimation(player);
+            playerAnimation(tempObj);
             break;
         }
     } 
+}
+
+function changeIandJ(tempObj, player){
+    let i = tempObj.i;
+    let j = tempObj.j;
+
+    tempObj.i = player.i;
+    tempObj.j = player.j;
+
+    player.i = i;
+    player.j = j;
 }
 
 function isNear(tempObj, player){
@@ -96,19 +112,24 @@ function isNear(tempObj, player){
 function playAnimationMove(tempObj, player){
     let playerLastX = player.x;
     let playerLastY = player.y;
+
+    let tempObjLastX = tempObj.x;
+    let tempObjLastY = tempObj.y;
     
     if((tempObj.j - player.j) == -1){
         console.log("PLAY RIGHT");
         player.Animation = new TweenMax.to(player, 1, {
-            x: tempObj.x, 
+            x: tempObjLastX, 
             ease: Power3.easeOut
         });
 
-        killPlayerAnimation(players[tempObj.i][tempObj.j]);
-        players[tempObj.i][tempObj.j].Animation = new TweenMax.to(players[tempObj.i][tempObj.j], 1, {
+        killPlayerAnimation(tempObj);
+        tempObj.Animation = new TweenMax.to(tempObj, 1, {
             x: playerLastX, 
             ease: Power3.easeOut
         });
+        
+        // killPlayerAnimation(players[player.i][player.j].Animation);
     }else if((tempObj.j - player.j) == 1){
         console.log("PLAY LEFT");
         player.Animation = new TweenMax.to(player, 1, {
@@ -116,8 +137,8 @@ function playAnimationMove(tempObj, player){
             ease: Power3.easeOut
         });
 
-        killPlayerAnimation(players[tempObj.i][tempObj.j]);
-        players[tempObj.i][tempObj.j].Animation = new TweenMax.to(players[tempObj.i][tempObj.j], 1, {
+        killPlayerAnimation(tempObj);
+        tempObj.Animation = new TweenMax.to(tempObj, 1, {
             x: playerLastX, 
             ease: Power3.easeOut
         });
@@ -128,8 +149,8 @@ function playAnimationMove(tempObj, player){
             ease: Power3.easeOut
         });
 
-        killPlayerAnimation(players[tempObj.i][tempObj.j]);
-        players[tempObj.i][tempObj.j].Animation = new TweenMax.to(players[tempObj.i][tempObj.j], 1, {
+        killPlayerAnimation(tempObj);
+        tempObj.Animation = new TweenMax.to(tempObj, 1, {
             y: playerLastY, 
             ease: Power3.easeOut
         });
@@ -140,12 +161,36 @@ function playAnimationMove(tempObj, player){
             ease: Power3.easeOut
         });
 
-        killPlayerAnimation(players[tempObj.i][tempObj.j]);
-        players[tempObj.i][tempObj.j].Animation = new TweenMax.to(players[tempObj.i][tempObj.j], 1, {
+        killPlayerAnimation(tempObj);
+        tempObj.Animation = new TweenMax.to(tempObj, 1, {
             y: playerLastY, 
             ease: Power3.easeOut
         });
     }
+}
+
+function swapObjCoordinats(tempObj, player){
+    console.log('До обмена')
+    console.log("tempObj: i = " + tempObj.i + " j = " + tempObj.j);
+    console.log("player: i = " + player.i + " j = " + player.j);
+
+    let tempI = players[tempObj.i][tempObj.j].i;
+    let tempJ = players[tempObj.i][tempObj.j].j;
+
+    players[tempObj.i][tempObj.j].i = players[player.i][player.j].i;
+    players[tempObj.i][tempObj.j].j = players[player.i][player.j].j;
+
+
+    players[player.i][player.j].i = tempI;
+    players[player.i][player.j].j = tempJ;
+
+
+
+    console.log('После обмена')
+    console.log("tempObj: i = " + tempObj.i + " j = " + tempObj.j);
+    console.log("player: i = " + player.i + " j = " + player.j);
+
+
 }
 
 function playerAnimation(player){
@@ -161,13 +206,25 @@ function playerAnimation(player){
 }
 
 function killPlayerAnimation(player){
-    player.Animation.kill();
-    player.Animation = new TweenMax.to(player.scale, 0.7, {
-        x: 1.0, 
-        y: 1.0, 
-        pixi: { tint: 0x2196F3 },
-        repeatDelay: 0.2,
-        ease: "power2.inOut",
-        yoyo: true,
-    });
+    if(player.Animation != null){
+        player.Animation.kill();
+        player.Animation = new TweenMax.to(player.scale, 0.7, {
+            x: 1.0, 
+            y: 1.0, 
+            pixi: { tint: 0x2196F3 },
+            repeatDelay: 0.2,
+            ease: "power2.inOut",
+            yoyo: true,
+        });
+    }else{
+        player.Animation = new TweenMax.to(player.scale, 0.7, {
+            x: 1.0, 
+            y: 1.0, 
+            pixi: { tint: 0x2196F3 },
+            repeatDelay: 0.2,
+            ease: "power2.inOut",
+            yoyo: true,
+        });
+    }
+    
 }
