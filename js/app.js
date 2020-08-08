@@ -20,6 +20,14 @@ window.onload = function(){
     
 
     createMap(players, colors); 
+    let tempIDs = [];
+    for (let i = 0; i < MAP_SIZE; i++) {
+        tempIDs[i] = [];
+       for (let j = 0; j < MAP_SIZE; j++) {
+           tempIDs[i][j] = players[i][j].id;
+       }
+    }
+    console.log(tempIDs)
 
     let idArray = [];
 
@@ -77,6 +85,7 @@ function clickFunction(player){
                 
                 playAnimationMove(tempObj, player);
                 changeIandJ(tempObj, player);
+                swapId(tempObj, player);
 
             }else{
                 if(!isNear(tempObj, player)){
@@ -98,6 +107,22 @@ function clickFunction(player){
             break;
         }
     } 
+}
+
+function swapId(tempObj, player){
+    let tempID = tempObj.id;  
+    
+    tempObj.id = player.id;
+    player.id = tempID;
+    
+    let tempIDs = [];
+    for (let i = 0; i < MAP_SIZE; i++) {
+        tempIDs[i] = [];
+       for (let j = 0; j < MAP_SIZE; j++) {
+           tempIDs[i][j] = players[i][j].id;
+       }
+    }
+    console.log(tempIDs);
 }
 
 function isThree(tempObj, player){
@@ -135,7 +160,6 @@ function isThree(tempObj, player){
 
 function swapObjs(tempObj, player, tempPlayersId){   
     let tempID = tempPlayersId[player.i][player.j];  
-    console.log("tempID "+ tempID)
     
     tempPlayersId[player.i][player.j] = tempPlayersId[tempObj.i][tempObj.j];
     tempPlayersId[tempObj.i][tempObj.j] = tempID;
