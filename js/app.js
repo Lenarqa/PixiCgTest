@@ -17,8 +17,6 @@ window.onload = function(){
         }
     );
 
-    
-
     createMap(players, colors); 
     let tempIDs = [];
     for (let i = 0; i < MAP_SIZE; i++) {
@@ -28,10 +26,6 @@ window.onload = function(){
        }
     }
     console.log(tempIDs)
-
-    let idArray = [];
-
-    // document.body.appendChild(app.view);
     container.appendChild(app.view);
 }
 
@@ -83,9 +77,14 @@ function clickFunction(player){
             if(isNear(tempObj, player) && isThree(tempObj, player)){
                 console.log("Is near");
                 
-                playAnimationMove(tempObj, player);
                 changeIandJ(tempObj, player);
-                swapId(tempObj, player);
+                // changeId(tempObj, player);
+                playAnimationMove(tempObj, player);
+                swapObject(tempObj, player);
+                // swapId(tempObj, player);
+                deleteThree();
+                deadAnimation(tempObj, player);
+
 
             }else{
                 if(!isNear(tempObj, player)){
@@ -95,8 +94,7 @@ function clickFunction(player){
                     console.log("or is not Three");
                     badStepAnimation(tempObj, player);
                 }
-            }
-                      
+            }       
             break;
         }
         case 1:{
@@ -109,9 +107,80 @@ function clickFunction(player){
     } 
 }
 
+function swapObject(tempObj, player){
+    let i = tempObj.i;
+    let j = tempObj.j;
+
+    tempObj.i = player.i;
+    tempObj.j = player.j;
+
+    player.i = i;
+    player.j = j;
+}
+
+function changeId(tempObj, player){
+    let tempID = tempObj.id;
+    tempObj.id = player.id;
+    player.id = tempID;
+}
+
+function deleteThree(){
+    let tempIDs = players.map(function(arr) {
+        return arr.map(el =>{
+            return el.id;
+        });
+    });
+
+    for (let i = 0; i < tempIDs.length; i++) {
+    
+        for (let j = 0; j < tempIDs.length; j++) {
+
+            let coll = 0;
+            
+            for (let z = 0; z < tempIDs.length; z++) {
+                if(tempIDs[i][j] == tempIDs[i][z] && tempIDs[i][j] == tempIDs[i][j+coll]){
+                    coll++;
+                }
+            }
+    
+            if(coll > 2){
+                for (let z = j; z < j + coll; z++) {
+                    players[i][z].id = 9;
+                }
+            }
+        }
+    }
+
+    for (let i = 0; i < tempIDs.length; i++) {   
+        for (let j = 0; j < tempIDs.length-2; j++) {
+            
+            let coll = 0;
+            
+            for (let z = 0; z < tempIDs.length; z++) {
+                if(j + coll > tempIDs.length-1){
+                    coll--;
+                }
+                if(tempIDs[j][i] == tempIDs[z][i] && tempIDs[j][i] == tempIDs[j+coll][i]){
+                    coll++;
+                }
+            }
+    
+            if(coll > 2){
+                for (let z = j; z < j + coll; z++) {
+                    players[z][i].id = 9;
+                }
+            }
+        }
+    }
+
+}
+
 function swapId(tempObj, player){
     let tempID = tempObj.id;  
     
+    // players[tempObj.i][tempObj.j].id = player.id;
+    // players[player.i][player.j].id = tempID;
+
     tempObj.id = player.id;
     player.id = tempID;
     
@@ -122,7 +191,12 @@ function swapId(tempObj, player){
            tempIDs[i][j] = players[i][j].id;
        }
     }
-    console.log(tempIDs);
+
+    for (let i = 0; i < MAP_SIZE; i++) {
+        for (let j = 0; j < MAP_SIZE; j++) {
+            players[i][j].id = tempIDs[i][j];
+        }
+    }
 }
 
 function isThree(tempObj, player){
@@ -168,14 +242,17 @@ function swapObjs(tempObj, player, tempPlayersId){
 }
 
 function changeIandJ(tempObj, player){
+    let tempObject = tempObj;
     let i = tempObj.i;
     let j = tempObj.j;
+    
+    players[i][j] = player;
+    players[player.i][player.j] = tempObject;
+    // tempObj.i = player.i;
+    // tempObj.j = player.j;
 
-    tempObj.i = player.i;
-    tempObj.j = player.j;
-
-    player.i = i;
-    player.j = j;
+    // player.i = i;
+    // player.j = j;
 }
 
 function isNear(tempObj, player){
@@ -212,6 +289,42 @@ function analizVerticalMap(){
 }
 
 // Animations
+function deadAnimation(tempObj, player){
+    let tempIDs = [];
+    
+    for (let i = 0; i < MAP_SIZE; i++) {
+        tempIDs[i] = [];
+       for (let j = 0; j < MAP_SIZE; j++) {
+           tempIDs[i][j] = players[i][j].id;
+       }
+    }
+
+    console.log(tempObj);
+    console.log(player)
+    for (let i = 0; i < MAP_SIZE; i++) {
+        for (let j = 0; j < MAP_SIZE; j++) {
+            if(players[i][j].id == 9 && tempIDs[i][j] == 9){
+                players[i][j].Animation = new TweenMax.to(players[i][j].scale, 3, {
+                    x: 0.5,
+                    y: 0.5, 
+                    ease: Power3.easeOut
+                });
+        
+            }
+        }
+    }
+    
+    // let tempIDs = [];
+    for (let i = 0; i < MAP_SIZE; i++) {
+        tempIDs[i] = [];
+       for (let j = 0; j < MAP_SIZE; j++) {
+           tempIDs[i][j] = players[i][j].id;
+       }
+    }
+    console.log("dead animation")
+    console.log(tempIDs);
+}
+
 function playAnimationMove(tempObj, player){
     let playerLastX = player.x;
     let playerLastY = player.y;
@@ -220,7 +333,7 @@ function playAnimationMove(tempObj, player){
     let tempObjLastY = tempObj.y;
     
     if((tempObj.j - player.j) == -1){
-        console.log("PLAY RIGHT");
+        console.log("PLAY LEFT");
         player.Animation = new TweenMax.to(player, 0.5, {
             x: tempObjLastX, 
             ease: Power3.easeOut
@@ -231,10 +344,8 @@ function playAnimationMove(tempObj, player){
             x: playerLastX, 
             ease: Power3.easeOut
         });
-        
-        // killPlayerAnimation(players[player.i][player.j].Animation);
     }else if((tempObj.j - player.j) == 1){
-        console.log("PLAY LEFT");
+        console.log("PLAY RIGHT");
         player.Animation = new TweenMax.to(player, 0.5, {
             x: tempObj.x, 
             ease: Power3.easeOut
@@ -245,8 +356,9 @@ function playAnimationMove(tempObj, player){
             x: playerLastX, 
             ease: Power3.easeOut
         });
+
     }else if((tempObj.i - player.i) == 1){
-        console.log("PLAY TOP");
+        console.log("PLAY BOTTOM");
         player.Animation = new TweenMax.to(player, 0.5, {
             y: tempObjLastY, 
             ease: Power3.easeOut
@@ -258,7 +370,7 @@ function playAnimationMove(tempObj, player){
             ease: Power3.easeOut
         });
     }else if((tempObj.i - player.i) == -1){
-        console.log("PLAY BOTTOM");
+        console.log("PLAY TOP");
         player.Animation = new TweenMax.to(player, 0.5, {
             y: tempObjLastY, 
             ease: Power3.easeOut
