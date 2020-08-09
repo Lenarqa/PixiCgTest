@@ -1,13 +1,14 @@
 const MAP_SIZE = 6;
 let app;
 let player;
-let colors = ['./img/beer.png', './img/coffee.png', './img/martini.png'];
+let colors = ['./img/beer.png', './img/coffee.png', './img/martini.png', ''];
 let playerClick = 1;
 let tempObj = {};
 let players = [];
+let container
 
 window.onload = function(){
-    let container = document.getElementById('container');
+    container = document.getElementById('container');
     
     app = new PIXI.Application(
         {
@@ -27,6 +28,7 @@ window.onload = function(){
     }
     console.log(tempIDs)
     container.appendChild(app.view);
+
 }
 
 function createMap(players){
@@ -63,6 +65,7 @@ function createMap(players){
     analizHorizontalMap(); //уменьшаем вероятность появления на карте тройки.
 }
 
+
 function clickFunction(player){
     
     switch(playerClick){
@@ -83,9 +86,12 @@ function clickFunction(player){
                 swapObject(tempObj, player);
                 // swapId(tempObj, player);
                 deleteThree();
+                
                 deadAnimation(tempObj, player);
+                fallAnimation();
+                fallObjs();
 
-
+                setTimeout(sechNine, 600);
             }else{
                 if(!isNear(tempObj, player)){
                     console.log("is not near");
@@ -99,12 +105,52 @@ function clickFunction(player){
         }
         case 1:{
             playerClick++;
-            console.log(`Выбран первый объект id = ${player.id}, i = ${player.i}, j = ${player.j}`);
+            console.log(`Выбран первый объект id = ${player.id}, i = ${player.i}, j = ${player.j} x = ${player.x}, y = ${player.y}`);
             tempObj = player;
             playerAnimation(tempObj);
             break;
         }
     } 
+}
+
+function sechNine(){
+    console.log("Sech Nine")
+    for (let j = 0; j < MAP_SIZE; j++) {
+        if(players[0][j].id == 9){
+            players[0][j].x = 10 + j * 70;
+            players[0][j].y = 10;
+            let random = Math.floor(Math.random() * 3); 
+            players[0][j].id = random;
+            players[0][j].texture = PIXI.Texture.from(colors[random]);
+        }
+    }
+    
+}
+
+function fallObjs(){
+    let pos = players.length - 1;
+    for (let i = 0; i < players.length; i++) {
+        pos = players.length-1;
+        for (let j = players.length-1; j >= 0; j--) {
+            if(players[j][i].id != 9){
+                // players[pos][i] = players[j][i];
+                changeIandJ(players[pos][i], players[j][i]);
+                swapObject(players[pos][i], players[j][i]);
+                // fallAnimation(players[j][i], players[pos][i]);
+                pos--;
+            }
+        }
+        while(pos > -1){
+            players[pos--][i].id = 9;
+        }
+    }
+
+    let tempIDs = players.map(function(arr) {
+        return arr.map(el =>{
+            return el.id;
+        });
+    });
+    console.log(tempIDs);
 }
 
 function swapObject(tempObj, player){
@@ -289,40 +335,73 @@ function analizVerticalMap(){
 }
 
 // Animations
-function deadAnimation(tempObj, player){
-    let tempIDs = [];
-    
-    for (let i = 0; i < MAP_SIZE; i++) {
-        tempIDs[i] = [];
-       for (let j = 0; j < MAP_SIZE; j++) {
-           tempIDs[i][j] = players[i][j].id;
-       }
+function fallAnimation(){
+    for(let i = MAP_SIZE - 2; i >= 0; i --){
+        for(let j = 0; j < MAP_SIZE; j ++){
+            //if(!this.gameArray[i][j].isEmpty){
+                let fallTiles = holesBelow(i, j);
+                if(fallTiles > 0){
+                    players[i][j].Animation = new TweenMax.to(players[i][j], 0.75, {
+                        y: players[i][j].y + fallTiles * 70,//70px = размер картинки + отступ  
+                        ease: Power3.easeOut
+                    });
+                    // for(let z = i + 1; z < MAP_SIZE; z ++){
+                    //     if(players[z][i].id == 9){
+                    //         players[z][j].Animation = new TweenMax.to(players[z][j], 0.75, {
+                    //             y: players[z][j].y - fallTiles * 65,//70px = размер картинки + отступ  
+                    //             ease: Power3.easeOut
+                    //         });
+                    //     }
+                    // }
+                }
+            //}
+        }
     }
+}
 
-    console.log(tempObj);
-    console.log(player)
+function holesBelow(row, col){
+    let result = 0;
+    for(let i = row + 1; i < MAP_SIZE; i ++){
+        if(players[i][col].id == 9){
+            result ++;
+        }
+    }
+    return result;
+}
+
+function deadAnimation(tempObj, player){
+    // let tempIDs = [];
+    
+    // for (let i = 0; i < MAP_SIZE; i++) {
+    //     tempIDs[i] = [];
+    //    for (let j = 0; j < MAP_SIZE; j++) {
+    //        tempIDs[i][j] = players[i][j].id;
+    //    }
+    // }
+
+    // // console.log(tempObj);
+    // // console.log(player)
     for (let i = 0; i < MAP_SIZE; i++) {
         for (let j = 0; j < MAP_SIZE; j++) {
-            if(players[i][j].id == 9 && tempIDs[i][j] == 9){
-                players[i][j].Animation = new TweenMax.to(players[i][j].scale, 3, {
+            if(players[i][j].id == 9 ){
+                players[i][j].Animation = new TweenMax.to(players[i][j].scale, 0.75, {
                     x: 0.5,
                     y: 0.5, 
                     ease: Power3.easeOut
                 });
-        
             }
         }
     }
     
     // let tempIDs = [];
-    for (let i = 0; i < MAP_SIZE; i++) {
-        tempIDs[i] = [];
-       for (let j = 0; j < MAP_SIZE; j++) {
-           tempIDs[i][j] = players[i][j].id;
-       }
-    }
-    console.log("dead animation")
-    console.log(tempIDs);
+    // for (let i = 0; i < MAP_SIZE; i++) {
+    //     tempIDs[i] = [];
+    //    for (let j = 0; j < MAP_SIZE; j++) {
+    //        tempIDs[i][j] = players[i][j].id;
+    //    }
+    // }
+    // console.log("dead animation")
+    // console.log(tempIDs);
 }
 
 function playAnimationMove(tempObj, player){
