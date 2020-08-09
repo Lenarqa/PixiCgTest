@@ -88,9 +88,9 @@ function clickFunction(player){
                 deleteThree();
                 
                 deadAnimation(tempObj, player);
-                // fallAnimation();
+                fallAnimation();
                 fallObjs();
-                setTimeout(renderMap, 600);
+                setTimeout(renderMap, 510);
 
                 // setTimeout(sechNine, 600);
             }else{
@@ -151,25 +151,26 @@ function renderMap(){
                 players[i][j].y = yPos[i];
 
 
-                players[i][j].Animation = new TweenMax.to(players[i][j].scale, 0.1, {
-                    y: 0.8,
-                    ease: "power2.inOut",
-                    yoyo: true,
-                });
+                // players[i][j].Animation = new TweenMax.to(players[i][j].scale, 0.1, {
+                //     y: 0.8,
+                //     ease: "power2.inOut",
+                //     yoyo: true,
+                // });
 
-                players[i][j].Animation = new TweenMax.to(players[i][j].scale, 0.1, {
-                    y: 1,
-                    ease: "power2.inOut",
-                    yoyo: true,
-                });
-                setTimeout(()=>{
-                    players[i][j].Animation = new TweenMax.to(players[i][j], 0.4, {
-                        // alpha: 1,
-                        y: yPos[i],
-                        ease: "power2.inOut",
-                        yoyo: true,
-                    });
-                }, 450);
+                // players[i][j].Animation = new TweenMax.to(players[i][j].scale, 0.1, {
+                //     y: 1,
+                //     ease: "power2.inOut",
+                //     yoyo: true,
+                // });
+
+                // setTimeout(()=>{
+                //     players[i][j].Animation = new TweenMax.to(players[i][j], 0.4, {
+                //         // alpha: 1,
+                //         y: yPos[i],
+                //         ease: "power2.inOut",
+                //         yoyo: true,
+                //     });
+                // }, 450);
             } 
             
             // players[i][j].Animation = new TweenMax.to(players[i][j], 0.4, {
@@ -453,9 +454,9 @@ function fallAnimation(){
             //if(!this.gameArray[i][j].isEmpty){
                 let fallTiles = holesBelow(i, j);
                 if(fallTiles > 0){
-                    players[i][j].Animation = new TweenMax.to(players[i][j], 0.75, {
+                    players[i][j].Animation = new TweenMax.to(players[i][j], 0.5, {
                         y: players[i][j].y + fallTiles * 70,//70px = размер картинки + отступ  
-                        ease: Power3.easeOut
+                        ease: "power2.inOut",
                     });
                     // for(let z = i + 1; z < MAP_SIZE; z ++){
                     //     if(players[z][i].id == 9){
