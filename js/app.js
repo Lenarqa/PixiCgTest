@@ -1,7 +1,7 @@
-const MAP_SIZE = 6;
+const MAP_SIZE = 8;
 let app;
 let player;
-let colors = ['./img/beer.png', './img/coffee.png', './img/martini.png'];
+let colors = ['./img/beer.png', './img/coffee.png', './img/martini.png', './img/coffee-mug.png', './img/teapot.png'];
 let playerClick = 1;
 let tempObj = {};
 let players = [];
@@ -12,9 +12,11 @@ window.onload = function(){
     
     app = new PIXI.Application(
         {
-            width: 450,
-            height: 450,
-            backgroundColor: 0x20B2AA,
+            // width: 450,
+            // height: 450,
+            width: 600,
+            height: 600,
+            backgroundColor: 0x131317,
         }
     );
 
@@ -40,7 +42,7 @@ function createMap(players){
         players[i] = [];
         for (let j = 0; j < MAP_SIZE; j++) {
 
-            let random = Math.floor(Math.random() * 3); 
+            let random = Math.floor(Math.random() * colors.length); 
             players[i][j] = new PIXI.Sprite.from(colors[random]);
             players[i][j].interactive = true;
             players[i][j].x = x;
@@ -77,6 +79,7 @@ function clickFunction(player){
             }
 
             console.log(`Выбран второй объект id = ${player.id}, i = ${player.i}, j = ${player.j}`);
+            
             if(isNear(tempObj, player) && isThree(tempObj, player)){
                 console.log("Is near");
                 
@@ -87,7 +90,7 @@ function clickFunction(player){
                 // swapId(tempObj, player);
                 deleteThree();
                 
-                deadAnimation(tempObj, player);
+                 setTimeout(deadAnimation(tempObj, player), 510);
                 fallAnimation();
                 fallObjs();
                 setTimeout(renderMap, 510);
@@ -126,9 +129,9 @@ function renderMap(){
             if(players[i][j].id == 9){
                 players[i][j].x = 10 + j * 70;
                 players[i][j].y = yPos[i];
-                let random = Math.floor(Math.random() * 3);
-                if(j > 2){
-                    if(random == players[i][j-1].id && random == players[i][j-1]){
+                let random = Math.floor(Math.random() * colors.length);
+                if(j > 1){
+                    if(random == players[i][j-1].id && random == players[i][j-1].id){
                         if(random < colors.length-1){
                             random++;
                         }else{
@@ -220,7 +223,7 @@ function sechNine(){
             if(players[i][j].id == 9){
                 players[i][j].x = 10 + j * 70;
                 players[i][j].y = yPos[i];
-                let random = Math.floor(Math.random() * 3); 
+                let random = Math.floor(Math.random() * colors.length); 
                 players[0][j].id = random;
                 players[0][j].texture = PIXI.Texture.from(colors[random]);
             }   
