@@ -138,26 +138,6 @@ function renderMap(){
                 }
                 players[i][j].id = random;
                 players[i][j].texture = PIXI.Texture.from(colors[random]);
-                players[i][j].alpha = 0;
-            }else{
-                players[i][j].x = 10 + j * 70;
-                players[i][j].y = yPos[i];
-            } 
-            
-            players[i][j].Animation = new TweenMax.to(players[i][j], 0.4, {
-                alpha: 0,
-                y: yPos[i] - 30,
-                ease: "power2.inOut",
-                yoyo: true,
-            });
-
-            setTimeout(()=>{
-                players[i][j].Animation = new TweenMax.to(players[i][j], 0.5, {
-                    alpha: 1,
-                    y: yPos[i],
-                    ease: "power2.inOut",
-                    yoyo: true,
-                });
 
                 players[i][j].Animation = new TweenMax.to(players[i][j].scale, 0.5, {
                     x: 1.0, 
@@ -166,8 +146,56 @@ function renderMap(){
                     // ease: Power3.easeOut,
                     yoyo: true,
                 });
+            }else{
+                players[i][j].x = 10 + j * 70;
+                players[i][j].y = yPos[i];
+
+
+                players[i][j].Animation = new TweenMax.to(players[i][j].scale, 0.1, {
+                    y: 0.8,
+                    ease: "power2.inOut",
+                    yoyo: true,
+                });
+
+                players[i][j].Animation = new TweenMax.to(players[i][j].scale, 0.1, {
+                    y: 1,
+                    ease: "power2.inOut",
+                    yoyo: true,
+                });
+                setTimeout(()=>{
+                    players[i][j].Animation = new TweenMax.to(players[i][j], 0.4, {
+                        // alpha: 1,
+                        y: yPos[i],
+                        ease: "power2.inOut",
+                        yoyo: true,
+                    });
+                }, 450);
+            } 
+            
+            // players[i][j].Animation = new TweenMax.to(players[i][j], 0.4, {
+            //     alpha: 0,
+            //     y: yPos[i] - 30,
+            //     ease: "power2.inOut",
+            //     yoyo: true,
+            // });
+
+            // setTimeout(()=>{
+            //     players[i][j].Animation = new TweenMax.to(players[i][j], 0.5, {
+            //         alpha: 1,
+            //         y: yPos[i],
+            //         ease: "power2.inOut",
+            //         yoyo: true,
+            //     });
+
+            //     players[i][j].Animation = new TweenMax.to(players[i][j].scale, 0.5, {
+            //         x: 1.0, 
+            //         y: 1.0, 
+            //         ease: "power2.inOut",
+            //         // ease: Power3.easeOut,
+            //         yoyo: true,
+            //     });
               
-            });
+            // });
         }
     }
 
