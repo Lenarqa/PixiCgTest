@@ -126,41 +126,51 @@ function renderMap(){
             if(players[i][j].id == 9){
                 players[i][j].x = 10 + j * 70;
                 players[i][j].y = yPos[i];
-                let random = Math.floor(Math.random() * 3); 
+                let random = Math.floor(Math.random() * 3);
+                if(j > 2){
+                    if(random == players[i][j-1].id && random == players[i][j-1]){
+                        if(random < colors.length-1){
+                            random++;
+                        }else{
+                            random--;
+                        }
+                    }
+                }
                 players[i][j].id = random;
                 players[i][j].texture = PIXI.Texture.from(colors[random]);
+                players[i][j].alpha = 0;
             }else{
                 players[i][j].x = 10 + j * 70;
                 players[i][j].y = yPos[i];
             } 
+            
             players[i][j].Animation = new TweenMax.to(players[i][j], 0.4, {
                 alpha: 0,
                 y: yPos[i] - 30,
                 ease: "power2.inOut",
                 yoyo: true,
             });
+
             setTimeout(()=>{
-                players[i][j].Animation = new TweenMax.to(players[i][j].scale, 0.5, {
-                    x: 1.0, 
-                    y: 1.0, 
-                    ease: "power2.inOut",
-                    yoyo: true,
-                });
                 players[i][j].Animation = new TweenMax.to(players[i][j], 0.5, {
                     alpha: 1,
                     y: yPos[i],
                     ease: "power2.inOut",
                     yoyo: true,
                 });
+
+                players[i][j].Animation = new TweenMax.to(players[i][j].scale, 0.5, {
+                    x: 1.0, 
+                    y: 1.0, 
+                    ease: "power2.inOut",
+                    // ease: Power3.easeOut,
+                    yoyo: true,
+                });
+              
             });
         }
     }
 
-
-    analizHorizontalMap();
-    analizVerticalMap();
-    analizHorizontalMap();
-    
     let tempIDs = players.map(function(arr) {
         return arr.map(el =>{
             return el.id;
