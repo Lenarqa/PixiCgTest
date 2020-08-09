@@ -1,7 +1,7 @@
 const MAP_SIZE = 6;
 let app;
 let player;
-let colors = ['./img/beer.png', './img/coffee.png', './img/martini.png', ''];
+let colors = ['./img/beer.png', './img/coffee.png', './img/martini.png'];
 let playerClick = 1;
 let tempObj = {};
 let players = [];
@@ -39,7 +39,7 @@ function createMap(players){
 
         players[i] = [];
         for (let j = 0; j < MAP_SIZE; j++) {
-            
+
             let random = Math.floor(Math.random() * 3); 
             players[i][j] = new PIXI.Sprite.from(colors[random]);
             players[i][j].interactive = true;
@@ -88,10 +88,11 @@ function clickFunction(player){
                 deleteThree();
                 
                 deadAnimation(tempObj, player);
-                fallAnimation();
+                // fallAnimation();
                 fallObjs();
+                setTimeout(renderMap, 600);
 
-                setTimeout(sechNine, 600);
+                // setTimeout(sechNine, 600);
             }else{
                 if(!isNear(tempObj, player)){
                     console.log("is not near");
@@ -113,8 +114,81 @@ function clickFunction(player){
     } 
 }
 
+function renderMap(){
+    console.log("render");
+    let yPos = [10];
+    for (let z = 0; z < MAP_SIZE-1; z++) {
+        yPos.push(yPos[z] + 70);
+    }
+    console.log(yPos);
+    for (let i = 0; i < MAP_SIZE; i++) {
+        for (let j = 0; j < MAP_SIZE; j++) {
+            if(players[i][j].id == 9){
+                players[i][j].x = 10 + j * 70;
+                players[i][j].y = yPos[i];
+                let random = Math.floor(Math.random() * 3); 
+                players[i][j].id = random;
+                players[i][j].texture = PIXI.Texture.from(colors[random]);
+            }else{
+                players[i][j].x = 10 + j * 70;
+                players[i][j].y = yPos[i];
+            } 
+            players[i][j].Animation = new TweenMax.to(players[i][j], 0.4, {
+                alpha: 0,
+                y: yPos[i] - 30,
+                ease: "power2.inOut",
+                yoyo: true,
+            });
+            setTimeout(()=>{
+                players[i][j].Animation = new TweenMax.to(players[i][j].scale, 0.5, {
+                    x: 1.0, 
+                    y: 1.0, 
+                    ease: "power2.inOut",
+                    yoyo: true,
+                });
+                players[i][j].Animation = new TweenMax.to(players[i][j], 0.5, {
+                    alpha: 1,
+                    y: yPos[i],
+                    ease: "power2.inOut",
+                    yoyo: true,
+                });
+            });
+        }
+    }
+
+
+    analizHorizontalMap();
+    analizVerticalMap();
+    analizHorizontalMap();
+    
+    let tempIDs = players.map(function(arr) {
+        return arr.map(el =>{
+            return el.id;
+        });
+    });
+    console.log(tempIDs);
+}
+
 function sechNine(){
-    console.log("Sech Nine")
+    console.log("Sech Nine");
+    let yPos = [10];
+    for (let z = 0; z < MAP_SIZE-1; z++) {
+        yPos.push(yPos[z] + 70);
+    }
+    console.log(yPos);
+    for (let i = 0; i < MAP_SIZE; i++) {
+        for (let j = 0; j < MAP_SIZE; j++) {
+            if(players[i][j].id == 9){
+                players[i][j].x = 10 + j * 70;
+                players[i][j].y = yPos[i];
+                let random = Math.floor(Math.random() * 3); 
+                players[0][j].id = random;
+                players[0][j].texture = PIXI.Texture.from(colors[random]);
+            }   
+        }
+    }
+    
+    /*
     for (let j = 0; j < MAP_SIZE; j++) {
         if(players[0][j].id == 9){
             players[0][j].x = 10 + j * 70;
@@ -124,7 +198,7 @@ function sechNine(){
             players[0][j].texture = PIXI.Texture.from(colors[random]);
         }
     }
-    
+    */
 }
 
 function fallObjs(){
@@ -385,8 +459,8 @@ function deadAnimation(tempObj, player){
         for (let j = 0; j < MAP_SIZE; j++) {
             if(players[i][j].id == 9 ){
                 players[i][j].Animation = new TweenMax.to(players[i][j].scale, 0.75, {
-                    x: 0.5,
-                    y: 0.5, 
+                    x: 0.0,
+                    y: 0.0, 
                     ease: Power3.easeOut
                 });
             }
