@@ -1,4 +1,4 @@
-const MAP_SIZE = 8;
+const MAP_SIZE = 6;
 let app;
 let player;
 let colors = ['./img/beer.png', './img/coffee.png', './img/martini.png', './img/coffee-mug.png', './img/teapot.png'];
@@ -12,10 +12,10 @@ window.onload = function(){
     
     app = new PIXI.Application(
         {
-            // width: 450,
-            // height: 450,
-            width: 600,
-            height: 600,
+            width: 450,
+            height: 450,
+            // width: 600,
+            // height: 600,
             backgroundColor: 0x131317,
         }
     );
@@ -452,12 +452,12 @@ function analizVerticalMap(){
 
 // Animations
 function fallAnimation(){
-    for(let i = MAP_SIZE - 2; i >= 0; i --){
-        for(let j = 0; j < MAP_SIZE; j ++){
+    for(let i = MAP_SIZE - 2; i >= 0; i--){
+        for(let j = 0; j < MAP_SIZE; j++){
             //if(!this.gameArray[i][j].isEmpty){
-                let fallTiles = holesBelow(i, j);
+                let fallTiles = freeSpaceBelow(i, j);
                 if(fallTiles > 0){
-                    players[i][j].Animation = new TweenMax.to(players[i][j], 0.5, {
+                    players[i][j].Animation = new TweenMax.to(players[i][j], 0.3, {
                         y: players[i][j].y + fallTiles * 70,//70px = размер картинки + отступ  
                         ease: "power2.inOut",
                     });
@@ -475,11 +475,11 @@ function fallAnimation(){
     }
 }
 
-function holesBelow(row, col){
+function freeSpaceBelow(row, col){
     let result = 0;
-    for(let i = row + 1; i < MAP_SIZE; i ++){
+    for(let i = row + 1; i < MAP_SIZE; i++){
         if(players[i][col].id == 9){
-            result ++;
+            result++;
         }
     }
     return result;
@@ -699,7 +699,7 @@ function playerAnimation(player){
         y: 1.3, 
         repeat: -1,
         pixi: { tint: 0x2196F3 },
-        repeatDelay: 0.2,
+        repeatDelay: 0.05,
         ease: "power2.inOut",
         yoyo: true,
     });
