@@ -445,6 +445,21 @@ function isThree(tempObj, player){
             }
         }
     }
+    // for (let i = 0; i < tempPlayersId.length; i++) {
+    //     for (let j = 0; j < tempPlayersId[i].length; j++) {
+    //         if(tempPlayersId[i][j] == tempPlayersId[i][j+1] && tempPlayersId[i][j] == tempPlayersId[i][j+2]){
+    //             col++;
+    //         }
+    //     }
+    // }
+
+    // for (let i = 0; i < tempPlayersId.length; i++) {
+    //     for (let j = 0; j < tempPlayersId[i].length-2; j++) {
+    //         if(tempPlayersId[j][i] == tempPlayersId[j+1][i] && tempPlayersId[j][i] == tempPlayersId[j+2][i]){
+    //             col++;
+    //         }
+    //     }
+    // }
 
     if(col > 0){
         return true;
