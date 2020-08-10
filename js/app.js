@@ -4,12 +4,15 @@ const MAP_SIZE = 6;
 let app;
 let colors = ['./img/beer.png', './img/coffee.png', './img/martini.png', './img/coffee-mug.png', './img/teapot.png'];
 let onOrDisable = ['./img/sound-off.png', './img/sound-on.png'];
+let restart = ['./img/restart.png'];
+let restartBtn;
 let soundBtn;
 let playerClick = 1;
 let tempObj = {};
 let players = [];
 let container;
-let time = 1;
+let gameTime = 10;
+let time;
 
 //Text
 let scoreText;
@@ -24,6 +27,14 @@ let isSoundPlay = false;
 
 window.onload = function(){
     container = document.getElementById('container');
+    startGame();
+}
+
+// GamePlay
+function startGame(){
+    time = gameTime;
+    // scoreText.text = '0';
+
     config = {
         width: 450,//6 * 6
         height: 450,//6 * 6
@@ -32,11 +43,15 @@ window.onload = function(){
         backgroundColor: 0x131317,
     }
     app = new PIXI.Application(config);
+    // //restart 
+    // initRestartBtn();
 
-    
     //sound
-    initSound();
+    if(mainSound == null){
+        initSound();
+    }
     initSoundBtn();
+    
     //createMap
     createMap(players, colors); 
     
@@ -46,18 +61,31 @@ window.onload = function(){
     
     // score
     initScore();
-
-    // let tempIDs = [];
-    // for (let i = 0; i < MAP_SIZE; i++) {
-    //     tempIDs[i] = [];
-    //    for (let j = 0; j < MAP_SIZE; j++) {
-    //        tempIDs[i][j] = players[i][j].id;
-    //    }
-    // }
-    // console.log(tempIDs);
     
-    container.appendChild(app.view);
+    if(container.firstChild != null){
+        console.log("кто то есть");
+        let child = container.firstChild;
+        container.removeChild(child);
+    }
 
+    container.appendChild(app.view);
+}
+
+function initRestartBtn(){
+    restartBtn = new PIXI.Sprite.from(restart[0]);
+    restartBtn.x = config.width * 0.45;
+    restartBtn.y = config.height * 0.5;
+    restartBtn.interactive = true;
+    restartBtn.on('pointerdown', startGame);
+    restartBtn.Animation = new TweenMax.to(restartBtn.scale, 1, {
+        x: 1.3, 
+        y: 1.3, 
+        repeat: -1,
+        repeatDelay: 0.02,
+        ease: "power2.inOut",
+        yoyo: true,
+    });
+    app.stage.addChild(restartBtn);
 }
 
 function gameOver(){
@@ -71,7 +99,7 @@ function gameOver(){
 
     players.forEach(arr =>{
         arr.forEach(el =>{
-            el.Animation = new TweenMax.to(el.scale, 0.75, {
+            el.Animation = new TweenMax.to(el.scale, 0.3, {
                 x: 0.0,
                 y: 0.0, 
                 ease: Power3.easeOut
@@ -84,9 +112,11 @@ function gameOver(){
     scoreText.style = {fontFamily : 'Arial', fontSize: 42, fill : 0xFFFFFF, align : 'center'};
     scoreText.Animation = new TweenMax.to(scoreText, 1, {
         x: config.width * 0.25,
-        y: config.height * 0.35, 
-        ease: Power3.easeOut
+        y: config.height * 0.25, 
+        ease: Power3.easeOut,
     });
+
+    initRestartBtn();
 }
 
 function startTimer(){
@@ -116,6 +146,7 @@ function initScore(){
 
 // Sounds
 function initSoundBtn(){
+    
     soundBtn = new PIXI.Sprite.from(onOrDisable[1]);
     soundBtn.x = config.width * 0.03;
     soundBtn.y = 1;
@@ -124,7 +155,7 @@ function initSoundBtn(){
     app.stage.addChild(soundBtn);
 
     if(isSoundPlay){
-        mainSound.play();
+        // mainSound.play();
         soundBtn.texture = PIXI.Texture.from(onOrDisable[1]);
     }else{
         soundBtn.texture = PIXI.Texture.from(onOrDisable[0]);
@@ -161,11 +192,10 @@ function initSound(){
 
     theEndSound = new Howl({
         src: ['./sound/theEnd.mp3'],
-        volume: 1,
+        volume: 0.5,
     });  
 }
 
-// GamePlay
 function createMap(players){
     let x = 10;
     let y = 40;
