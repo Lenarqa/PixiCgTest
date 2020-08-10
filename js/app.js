@@ -195,13 +195,15 @@ function clickFunction(player){
             }
             
             if(isNear(tempObj, player) && isThree(tempObj, player)){
-                
+              
+                let iMinus = tempObj.i - player.i;
                 changeIandJ(tempObj, player);
                 playAnimationMove(tempObj, player);
                 swapObject(tempObj, player);
                 deleteThree();                
                 deadAnimation(tempObj, player);
-                setTimeout(fallAnimation, 10);
+                // setTimeout(fallAnimation, 10);
+                fallAnimation(iMinus, tempObj);
                 fallObjs();
                 setTimeout(renderMap, 510);
                 addScore();
@@ -554,15 +556,25 @@ function initSound(){
 }
 
 // Animations
-function fallAnimation(){
+function fallAnimation(iMinus, tempObj){
     for(let i = MAP_SIZE - 2; i >= 0; i--){
         for(let j = 0; j < MAP_SIZE; j++){
             let fallTiles = freeSpaceBelow(i, j);
             if(fallTiles > 0){
-                players[i][j].Animation = new TweenMax.to(players[i][j], 0.33, {
-                    y: players[i][j].y + fallTiles * 70,//70px = размер картинки + отступ  
-                    ease: "power2.inOut",
-                });
+                if(iMinus != -1){
+                    players[i][j].Animation = new TweenMax.to(players[i][j], 0.33, {
+                        y: players[i][j].y + fallTiles * 70,//70px = размер картинки + отступ  
+                        ease: "power2.inOut",
+                    });
+                }else{
+                    if((players[i][j].i == tempObj.i) && (players[i][j].j == tempObj.j)){
+                        players[i][j].Animation = new TweenMax.to(players[i][j], 0.33, {
+                            y: players[i][j].y,//70px = размер картинки + отступ  
+                            ease: "power2.inOut",
+                        });
+                    }
+                }
+                
             }
         }
     }
