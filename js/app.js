@@ -11,7 +11,7 @@ let playerClick = 1;
 let tempObj = {};
 let players = [];
 let container;
-let gameTime = 10;
+let gameTime = 30;
 let time;
 
 //Text
@@ -36,7 +36,7 @@ function startGame(){
     // scoreText.text = '0';
 
     config = {
-        width: 450,//6 * 6
+        width: 410,//6 * 6
         height: 450,//6 * 6
         // width: 600, //8 * 8
         // height: 600, //8 * 8
