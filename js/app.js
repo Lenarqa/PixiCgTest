@@ -1,41 +1,114 @@
+//configs
 const MAP_SIZE = 6;
 let app;
-let player;
 let colors = ['./img/beer.png', './img/coffee.png', './img/martini.png', './img/coffee-mug.png', './img/teapot.png'];
+let onOrDisable = ['./img/sound-off.png', './img/sound-on.png'];
+let soundBtn;
 let playerClick = 1;
 let tempObj = {};
 let players = [];
-let container
+let container;
+
+//Text
+let scoreText;
+
+// sounds
+let mainSound;
+let goodChoiceSound;
+let noGoodChoiceSound;
+let theEndSound;
+let isSoundPlay = true;
 
 window.onload = function(){
     container = document.getElementById('container');
-    
-    app = new PIXI.Application(
-        {
-            width: 450,
-            height: 450,
-            // width: 600,
-            // height: 600,
-            backgroundColor: 0x131317,
-        }
-    );
-
-    createMap(players, colors); 
-    let tempIDs = [];
-    for (let i = 0; i < MAP_SIZE; i++) {
-        tempIDs[i] = [];
-       for (let j = 0; j < MAP_SIZE; j++) {
-           tempIDs[i][j] = players[i][j].id;
-       }
+    let config = {
+        width: 450,//6 * 6
+        height: 450,//6 * 6
+        // width: 600, //8 * 8
+        // height: 600, //8 * 8
+        backgroundColor: 0x131317,
     }
-    console.log(tempIDs)
+    app = new PIXI.Application(config);
+
+
+    //sound
+    initSound();
+
+    soundBtn = new PIXI.Sprite.from(onOrDisable[1]);
+    soundBtn.x = config.width * 0.03;
+    soundBtn.y = 1;
+    soundBtn.on('pointerdown', soundOfforOn);
+    soundBtn.interactive = true;
+    app.stage.addChild(soundBtn);
+
+    if(isSoundPlay){
+        mainSound.play();
+        soundBtn.texture = PIXI.Texture.from(onOrDisable[1]);
+    }else{
+        soundBtn.texture = PIXI.Texture.from(onOrDisable[0]);
+    }
+
+    
+
+    //createMap
+    createMap(players, colors); 
+    
+    // score
+    scoreText = new PIXI.Text('0',{fontFamily : 'Arial', fontSize: 24, fill : 0xFFFFFF});
+    scoreText.x = config.width * 0.45;
+    scoreText.y = 10
+    app.stage.addChild(scoreText);
+
+    // let tempIDs = [];
+    // for (let i = 0; i < MAP_SIZE; i++) {
+    //     tempIDs[i] = [];
+    //    for (let j = 0; j < MAP_SIZE; j++) {
+    //        tempIDs[i][j] = players[i][j].id;
+    //    }
+    // }
+    // console.log(tempIDs);
+    
     container.appendChild(app.view);
 
 }
 
+function soundOfforOn(){
+    isSoundPlay = !isSoundPlay;
+    if(isSoundPlay){
+        mainSound.play();
+        soundBtn.texture = PIXI.Texture.from(onOrDisable[1]);
+    }else{
+        soundBtn.texture = PIXI.Texture.from(onOrDisable[0]);
+        mainSound.pause();
+    }
+}
+
+function initSound(){
+    mainSound = new Howl({
+        src: ['./sound/mainSound.mp3'],
+        loop: true,
+        volume: 1,
+    });  
+
+    goodChoiceSound = new Howl({
+        src: ['./sound/GoodChoice.mp3'],
+        volume: 1,
+    });  
+
+    noGoodChoiceSound = new Howl({
+        src: ['./sound/noGoodChoice.mp3'],
+        volume: 1,
+    });
+
+    theEndSound = new Howl({
+        src: ['./sound/theEnd.mp3'],
+        volume: 1,
+    });  
+}
+
 function createMap(players){
     let x = 10;
-    let y = 10;
+    let y = 40;
 
     for (let i = 0; i < MAP_SIZE; i++) {
 
@@ -86,14 +159,17 @@ function clickFunction(player){
                 changeIandJ(tempObj, player);
                 // changeId(tempObj, player);
                 playAnimationMove(tempObj, player);
+                
                 swapObject(tempObj, player);
                 // swapId(tempObj, player);
                 deleteThree();
                 
-                 setTimeout(deadAnimation(tempObj, player), 510);
+                // setTimeout(deadAnimation(tempObj, player), 510);
+                deadAnimation(tempObj, player);
                 fallAnimation();
                 fallObjs();
                 setTimeout(renderMap, 510);
+                addScore();
 
                 // setTimeout(sechNine, 600);
             }else{
@@ -117,13 +193,39 @@ function clickFunction(player){
     } 
 }
 
-function renderMap(){
-    console.log("render");
-    let yPos = [10];
+function addScore(){
+    scoreText.text = (parseInt(scoreText.text) + 100).toString();
+    let lastX = scoreText.x
+    scoreText.Animation =  new TweenMax.to(scoreText.scale, 0.3, {
+        x: 1.3,
+        y: 1.3, 
+        rotation: 0.45, 
+        repeatDelay: 0.05,
+        ease: "power2.inOut",
+    });
+
+    setTimeout(()=>{
+        scoreText.Animation =  new TweenMax.to(scoreText.scale, 0.3, {
+            x: 1, 
+            y: 1.0, 
+            rotation: 0,
+            repeatDelay: 0.05,
+            ease: "power2.inOut",
+            // yoyo: true,
+        });
+    }, 200)
+    
+    app.stage.addChild(scoreText);
+}
+
+function renderMap(){    
+    let yPos = [40];
     for (let z = 0; z < MAP_SIZE-1; z++) {
         yPos.push(yPos[z] + 70);
     }
+
     console.log(yPos);
+
     for (let i = 0; i < MAP_SIZE; i++) {
         for (let j = 0; j < MAP_SIZE; j++) {
             if(players[i][j].id == 9){
@@ -152,54 +254,7 @@ function renderMap(){
             }else{
                 players[i][j].x = 10 + j * 70;
                 players[i][j].y = yPos[i];
-
-
-                // players[i][j].Animation = new TweenMax.to(players[i][j].scale, 0.1, {
-                //     y: 0.8,
-                //     ease: "power2.inOut",
-                //     yoyo: true,
-                // });
-
-                // players[i][j].Animation = new TweenMax.to(players[i][j].scale, 0.1, {
-                //     y: 1,
-                //     ease: "power2.inOut",
-                //     yoyo: true,
-                // });
-
-                // setTimeout(()=>{
-                //     players[i][j].Animation = new TweenMax.to(players[i][j], 0.4, {
-                //         // alpha: 1,
-                //         y: yPos[i],
-                //         ease: "power2.inOut",
-                //         yoyo: true,
-                //     });
-                // }, 450);
             } 
-            
-            // players[i][j].Animation = new TweenMax.to(players[i][j], 0.4, {
-            //     alpha: 0,
-            //     y: yPos[i] - 30,
-            //     ease: "power2.inOut",
-            //     yoyo: true,
-            // });
-
-            // setTimeout(()=>{
-            //     players[i][j].Animation = new TweenMax.to(players[i][j], 0.5, {
-            //         alpha: 1,
-            //         y: yPos[i],
-            //         ease: "power2.inOut",
-            //         yoyo: true,
-            //     });
-
-            //     players[i][j].Animation = new TweenMax.to(players[i][j].scale, 0.5, {
-            //         x: 1.0, 
-            //         y: 1.0, 
-            //         ease: "power2.inOut",
-            //         // ease: Power3.easeOut,
-            //         yoyo: true,
-            //     });
-              
-            // });
         }
     }
 
@@ -454,23 +509,13 @@ function analizVerticalMap(){
 function fallAnimation(){
     for(let i = MAP_SIZE - 2; i >= 0; i--){
         for(let j = 0; j < MAP_SIZE; j++){
-            //if(!this.gameArray[i][j].isEmpty){
-                let fallTiles = freeSpaceBelow(i, j);
-                if(fallTiles > 0){
-                    players[i][j].Animation = new TweenMax.to(players[i][j], 0.3, {
-                        y: players[i][j].y + fallTiles * 70,//70px = размер картинки + отступ  
-                        ease: "power2.inOut",
-                    });
-                    // for(let z = i + 1; z < MAP_SIZE; z ++){
-                    //     if(players[z][i].id == 9){
-                    //         players[z][j].Animation = new TweenMax.to(players[z][j], 0.75, {
-                    //             y: players[z][j].y - fallTiles * 65,//70px = размер картинки + отступ  
-                    //             ease: Power3.easeOut
-                    //         });
-                    //     }
-                    // }
-                }
-            //}
+            let fallTiles = freeSpaceBelow(i, j);
+            if(fallTiles > 0){
+                players[i][j].Animation = new TweenMax.to(players[i][j], 0.3, {
+                    y: players[i][j].y + fallTiles * 70,//70px = размер картинки + отступ  
+                    ease: "power2.inOut",
+                });
+            }
         }
     }
 }
