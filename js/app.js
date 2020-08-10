@@ -201,7 +201,7 @@ function clickFunction(player){
                 swapObject(tempObj, player);
                 deleteThree();                
                 deadAnimation(tempObj, player);
-                fallAnimation();
+                setTimeout(fallAnimation, 10);
                 fallObjs();
                 setTimeout(renderMap, 510);
                 addScore();
@@ -248,7 +248,6 @@ function addScore(){
             rotation: 0,
             repeatDelay: 0.05,
             ease: "power2.inOut",
-            // yoyo: true,
         });
     }, 200)
     
@@ -560,7 +559,7 @@ function fallAnimation(){
         for(let j = 0; j < MAP_SIZE; j++){
             let fallTiles = freeSpaceBelow(i, j);
             if(fallTiles > 0){
-                players[i][j].Animation = new TweenMax.to(players[i][j], 0.3, {
+                players[i][j].Animation = new TweenMax.to(players[i][j], 0.33, {
                     y: players[i][j].y + fallTiles * 70,//70px = размер картинки + отступ  
                     ease: "power2.inOut",
                 });
@@ -624,6 +623,7 @@ function playAnimationMove(tempObj, player){
         });
 
     }else if((tempObj.i - player.i) == 1){
+        console.log("TOP")
         player.Animation = new TweenMax.to(player, 0.5, {
             y: tempObjLastY, 
             ease: Power3.easeOut
@@ -635,6 +635,8 @@ function playAnimationMove(tempObj, player){
             ease: Power3.easeOut
         });
     }else if((tempObj.i - player.i) == -1){
+        console.log("BOTTOM")
+        // killPlayerAnimation(player);
         player.Animation = new TweenMax.to(player, 0.5, {
             y: tempObjLastY, 
             ease: Power3.easeOut
