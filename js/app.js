@@ -33,23 +33,21 @@ window.onload = function(){
 // GamePlay
 function startGame(){
     time = gameTime;
-    // scoreText.text = '0';
 
     config = {
         width: 410,//6 * 6
         height: 450,//6 * 6
-        // width: 600, //8 * 8
-        // height: 600, //8 * 8
         backgroundColor: 0x131317,
     }
+
     app = new PIXI.Application(config);
-    // //restart 
-    // initRestartBtn();
 
     //sound
     if(mainSound == null){
         initSound();
     }
+
+    //soundBtn
     initSoundBtn();
     
     //createMap
@@ -63,7 +61,6 @@ function startGame(){
     initScore();
     
     if(container.firstChild != null){
-        console.log("кто то есть");
         let child = container.firstChild;
         container.removeChild(child);
     }
@@ -115,8 +112,6 @@ function gameOver(){
         });
     }, 100);
     
-    
-
     let score = parseInt(scoreText.text);
     scoreText.text = `Final score:\n ${score}`;
     scoreText.style = {fontFamily : 'Arial', fontSize: 42, fill : 0xFFFFFF, align : 'center'};
@@ -152,58 +147,6 @@ function initScore(){
     scoreText.x = config.width * 0.45;
     scoreText.y = 10
     app.stage.addChild(scoreText);
-}
-
-// Sounds
-function initSoundBtn(){
-    
-    soundBtn = new PIXI.Sprite.from(onOrDisable[1]);
-    soundBtn.x = config.width * 0.03;
-    soundBtn.y = 1;
-    soundBtn.on('pointerdown', soundOfforOn);
-    soundBtn.interactive = true;
-    app.stage.addChild(soundBtn);
-
-    if(isSoundPlay){
-        // mainSound.play();
-        soundBtn.texture = PIXI.Texture.from(onOrDisable[1]);
-    }else{
-        soundBtn.texture = PIXI.Texture.from(onOrDisable[0]);
-    }
-}
-
-function soundOfforOn(){
-    isSoundPlay = !isSoundPlay;
-    if(isSoundPlay){
-        mainSound.play();
-        soundBtn.texture = PIXI.Texture.from(onOrDisable[1]);
-    }else{
-        soundBtn.texture = PIXI.Texture.from(onOrDisable[0]);
-        mainSound.pause();
-    }
-}
-
-function initSound(){
-    mainSound = new Howl({
-        src: ['./sound/mainSound.mp3'],
-        loop: true,
-        volume: 0.8,
-    });  
-
-    goodChoiceSound = new Howl({
-        src: ['./sound/GoodChoice.mp3'],
-        volume: 0.5,
-    });  
-
-    noGoodChoiceSound = new Howl({
-        src: ['./sound/noGoodChoice.mp3'],
-        volume: 0.5,
-    });
-
-    theEndSound = new Howl({
-        src: ['./sound/theEnd.mp3'],
-        volume: 0.5,
-    });  
 }
 
 function createMap(players){
@@ -250,21 +193,13 @@ function clickFunction(player){
             if(player.i == tempObj.i && player.j == tempObj.j){
                  killPlayerAnimation(tempObj);
             }
-
-            console.log(`Выбран второй объект id = ${player.id}, i = ${player.i}, j = ${player.j}`);
             
             if(isNear(tempObj, player) && isThree(tempObj, player)){
-                console.log("Is near");
                 
                 changeIandJ(tempObj, player);
-                // changeId(tempObj, player);
                 playAnimationMove(tempObj, player);
-                
                 swapObject(tempObj, player);
-                // swapId(tempObj, player);
-                deleteThree();
-                
-                // setTimeout(deadAnimation(tempObj, player), 510);
+                deleteThree();                
                 deadAnimation(tempObj, player);
                 fallAnimation();
                 fallObjs();
@@ -274,14 +209,10 @@ function clickFunction(player){
                 if(isSoundPlay){
                     goodChoiceSound.play();
                 }
-
-                // setTimeout(sechNine, 600);
             }else{
                 if(!isNear(tempObj, player)){
-                    console.log("is not near");
                     killPlayerAnimation(tempObj);
                 }else{
-                    console.log("or is not Three");
                     badStepAnimation(tempObj, player);
                 }
                 if(isSoundPlay){
@@ -292,7 +223,6 @@ function clickFunction(player){
         }
         case 1:{
             playerClick++;
-            console.log(`Выбран первый объект id = ${player.id}, i = ${player.i}, j = ${player.j} x = ${player.x}, y = ${player.y}`);
             tempObj = player;
             playerAnimation(tempObj);
             break;
@@ -331,8 +261,6 @@ function renderMap(){
         yPos.push(yPos[z] + 70);
     }
 
-    console.log(yPos);
-
     for (let i = 0; i < MAP_SIZE; i++) {
         for (let j = 0; j < MAP_SIZE; j++) {
             if(players[i][j].id == 9){
@@ -364,17 +292,9 @@ function renderMap(){
             } 
         }
     }
-
-    let tempIDs = players.map(function(arr) {
-        return arr.map(el =>{
-            return el.id;
-        });
-    });
-    console.log(tempIDs);
 }
 
 function sechNine(){
-    console.log("Sech Nine");
     let yPos = [10];
     for (let z = 0; z < MAP_SIZE-1; z++) {
         yPos.push(yPos[z] + 70);
@@ -391,18 +311,6 @@ function sechNine(){
             }   
         }
     }
-    
-    /*
-    for (let j = 0; j < MAP_SIZE; j++) {
-        if(players[0][j].id == 9){
-            players[0][j].x = 10 + j * 70;
-            players[0][j].y = 10;
-            let random = Math.floor(Math.random() * 3); 
-            players[0][j].id = random;
-            players[0][j].texture = PIXI.Texture.from(colors[random]);
-        }
-    }
-    */
 }
 
 function fallObjs(){
@@ -411,10 +319,8 @@ function fallObjs(){
         pos = players.length-1;
         for (let j = players.length-1; j >= 0; j--) {
             if(players[j][i].id != 9){
-                // players[pos][i] = players[j][i];
                 changeIandJ(players[pos][i], players[j][i]);
                 swapObject(players[pos][i], players[j][i]);
-                // fallAnimation(players[j][i], players[pos][i]);
                 pos--;
             }
         }
@@ -422,13 +328,6 @@ function fallObjs(){
             players[pos--][i].id = 9;
         }
     }
-
-    let tempIDs = players.map(function(arr) {
-        return arr.map(el =>{
-            return el.id;
-        });
-    });
-    console.log(tempIDs);
 }
 
 function swapObject(tempObj, player){
@@ -501,9 +400,6 @@ function deleteThree(){
 
 function swapId(tempObj, player){
     let tempID = tempObj.id;  
-    
-    // players[tempObj.i][tempObj.j].id = player.id;
-    // players[player.i][player.j].id = tempID;
 
     tempObj.id = player.id;
     player.id = tempID;
@@ -572,11 +468,6 @@ function changeIandJ(tempObj, player){
     
     players[i][j] = player;
     players[player.i][player.j] = tempObject;
-    // tempObj.i = player.i;
-    // tempObj.j = player.j;
-
-    // player.i = i;
-    // player.j = j;
 }
 
 function isNear(tempObj, player){
@@ -612,6 +503,57 @@ function analizVerticalMap(){
     }
 }
 
+// Sounds
+function initSoundBtn(){
+    
+    soundBtn = new PIXI.Sprite.from(onOrDisable[1]);
+    soundBtn.x = config.width * 0.03;
+    soundBtn.y = 1;
+    soundBtn.on('pointerdown', soundOfforOn);
+    soundBtn.interactive = true;
+    app.stage.addChild(soundBtn);
+
+    if(isSoundPlay){
+        soundBtn.texture = PIXI.Texture.from(onOrDisable[1]);
+    }else{
+        soundBtn.texture = PIXI.Texture.from(onOrDisable[0]);
+    }
+}
+
+function soundOfforOn(){
+    isSoundPlay = !isSoundPlay;
+    if(isSoundPlay){
+        mainSound.play();
+        soundBtn.texture = PIXI.Texture.from(onOrDisable[1]);
+    }else{
+        soundBtn.texture = PIXI.Texture.from(onOrDisable[0]);
+        mainSound.pause();
+    }
+}
+
+function initSound(){
+    mainSound = new Howl({
+        src: ['./sound/mainSound.mp3'],
+        loop: true,
+        volume: 0.8,
+    });  
+
+    goodChoiceSound = new Howl({
+        src: ['./sound/GoodChoice.mp3'],
+        volume: 0.5,
+    });  
+
+    noGoodChoiceSound = new Howl({
+        src: ['./sound/noGoodChoice.mp3'],
+        volume: 0.5,
+    });
+
+    theEndSound = new Howl({
+        src: ['./sound/theEnd.mp3'],
+        volume: 0.5,
+    });  
+}
+
 // Animations
 function fallAnimation(){
     for(let i = MAP_SIZE - 2; i >= 0; i--){
@@ -638,17 +580,6 @@ function freeSpaceBelow(row, col){
 }
 
 function deadAnimation(tempObj, player){
-    // let tempIDs = [];
-    
-    // for (let i = 0; i < MAP_SIZE; i++) {
-    //     tempIDs[i] = [];
-    //    for (let j = 0; j < MAP_SIZE; j++) {
-    //        tempIDs[i][j] = players[i][j].id;
-    //    }
-    // }
-
-    // // console.log(tempObj);
-    // // console.log(player)
     for (let i = 0; i < MAP_SIZE; i++) {
         for (let j = 0; j < MAP_SIZE; j++) {
             if(players[i][j].id == 9 ){
@@ -660,16 +591,6 @@ function deadAnimation(tempObj, player){
             }
         }
     }
-    
-    // let tempIDs = [];
-    // for (let i = 0; i < MAP_SIZE; i++) {
-    //     tempIDs[i] = [];
-    //    for (let j = 0; j < MAP_SIZE; j++) {
-    //        tempIDs[i][j] = players[i][j].id;
-    //    }
-    // }
-    // console.log("dead animation")
-    // console.log(tempIDs);
 }
 
 function playAnimationMove(tempObj, player){
@@ -680,7 +601,6 @@ function playAnimationMove(tempObj, player){
     let tempObjLastY = tempObj.y;
     
     if((tempObj.j - player.j) == -1){
-        console.log("PLAY LEFT");
         player.Animation = new TweenMax.to(player, 0.5, {
             x: tempObjLastX, 
             ease: Power3.easeOut
@@ -692,7 +612,6 @@ function playAnimationMove(tempObj, player){
             ease: Power3.easeOut
         });
     }else if((tempObj.j - player.j) == 1){
-        console.log("PLAY RIGHT");
         player.Animation = new TweenMax.to(player, 0.5, {
             x: tempObj.x, 
             ease: Power3.easeOut
@@ -705,7 +624,6 @@ function playAnimationMove(tempObj, player){
         });
 
     }else if((tempObj.i - player.i) == 1){
-        console.log("PLAY BOTTOM");
         player.Animation = new TweenMax.to(player, 0.5, {
             y: tempObjLastY, 
             ease: Power3.easeOut
@@ -717,7 +635,6 @@ function playAnimationMove(tempObj, player){
             ease: Power3.easeOut
         });
     }else if((tempObj.i - player.i) == -1){
-        console.log("PLAY TOP");
         player.Animation = new TweenMax.to(player, 0.5, {
             y: tempObjLastY, 
             ease: Power3.easeOut
@@ -739,7 +656,6 @@ function badStepAnimation(tempObj, player){
     let tempObjLastY = tempObj.y;
     
     if((tempObj.j - player.j) == -1){
-        console.log("PLAY RIGHT bad step");
         player.Animation = new TweenMax.to(player, 0.5, {
             x: tempObjLastX, 
             ease: Power3.easeOut,
@@ -763,11 +679,8 @@ function badStepAnimation(tempObj, player){
                 yoyo: true,
                 ease: Power3.easeOut,
             });
-        }, 500);
-        
-        // killPlayerAnimation(players[player.i][player.j].Animation);
+        }, 500); 
     }else if((tempObj.j - player.j) == 1){
-        console.log("PLAY LEFT bad step");
         player.Animation = new TweenMax.to(player, 0.5, {
             x: tempObj.x, 
             ease: Power3.easeOut
@@ -792,7 +705,6 @@ function badStepAnimation(tempObj, player){
             });
         }, 500);
     }else if((tempObj.i - player.i) == 1){
-        console.log("PLAY TOP bad step");
         player.Animation = new TweenMax.to(player, 0.5, {
             y: tempObjLastY, 
             ease: Power3.easeOut
@@ -818,7 +730,6 @@ function badStepAnimation(tempObj, player){
         }, 500);
 
     }else if((tempObj.i - player.i) == -1){
-        console.log("PLAY BOTTOM bad step");
         player.Animation = new TweenMax.to(player, 0.5, {
             y: tempObjLastY, 
             ease: Power3.easeOut
