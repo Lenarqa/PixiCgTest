@@ -107,6 +107,16 @@ function gameOver(){
         })
     });
 
+    setTimeout(()=>{
+        players.forEach(arr =>{
+            arr.forEach(el =>{
+                el.alpha = 0;
+            })
+        });
+    }, 100);
+    
+    
+
     let score = parseInt(scoreText.text);
     scoreText.text = `Final score:\n ${score}`;
     scoreText.style = {fontFamily : 'Arial', fontSize: 42, fill : 0xFFFFFF, align : 'center'};
