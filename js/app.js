@@ -9,16 +9,18 @@ let playerClick = 1;
 let tempObj = {};
 let players = [];
 let container;
+let time = 1;
 
 //Text
 let scoreText;
+let timerText;
 
 // sounds
 let mainSound;
 let goodChoiceSound;
 let noGoodChoiceSound;
 let theEndSound;
-let isSoundPlay = true;
+let isSoundPlay = false;
 
 window.onload = function(){
     container = document.getElementById('container');
@@ -31,20 +33,19 @@ window.onload = function(){
     }
     app = new PIXI.Application(config);
 
-
+    
     //sound
     initSound();
-
     initSoundBtn();
-
     //createMap
     createMap(players, colors); 
     
+    // timer
+    initTimerText();
+    startTimer();
+    
     // score
-    scoreText = new PIXI.Text('0',{fontFamily : 'Arial', fontSize: 24, fill : 0xFFFFFF});
-    scoreText.x = config.width * 0.45;
-    scoreText.y = 10
-    app.stage.addChild(scoreText);
+    initScore();
 
     // let tempIDs = [];
     // for (let i = 0; i < MAP_SIZE; i++) {
@@ -57,6 +58,60 @@ window.onload = function(){
     
     container.appendChild(app.view);
 
+}
+
+function gameOver(){
+    if(isSoundPlay){
+        mainSound.pause();
+        theEndSound.play();
+        setTimeout(()=>{
+            mainSound.play();
+        }, 2700);
+    }
+
+    players.forEach(arr =>{
+        arr.forEach(el =>{
+            el.Animation = new TweenMax.to(el.scale, 0.75, {
+                x: 0.0,
+                y: 0.0, 
+                ease: Power3.easeOut
+            });
+        })
+    });
+
+    let score = parseInt(scoreText.text);
+    scoreText.text = `Final score:\n ${score}`;
+    scoreText.style = {fontFamily : 'Arial', fontSize: 42, fill : 0xFFFFFF, align : 'center'};
+    scoreText.Animation = new TweenMax.to(scoreText, 1, {
+        x: config.width * 0.25,
+        y: config.height * 0.35, 
+        ease: Power3.easeOut
+    });
+}
+
+function startTimer(){
+    let timer = setInterval(tick, 1000)
+    function tick(){
+        timerText.text = `${--time}`;
+        if(time == 0){
+            clearInterval(timer);
+            gameOver();
+        }
+    }
+}
+
+function initTimerText(){
+    timerText = new PIXI.Text(`${time}`,{fontFamily : 'Arial', fontSize: 24, fill : 0xFFFFFF});
+    timerText.x = config.width * 0.8;
+    timerText.y = 10
+    app.stage.addChild(timerText);
+}
+
+function initScore(){
+    scoreText = new PIXI.Text('0',{fontFamily : 'Arial', fontSize: 24, fill : 0xFFFFFF, align : 'center'});
+    scoreText.x = config.width * 0.45;
+    scoreText.y = 10
+    app.stage.addChild(scoreText);
 }
 
 // Sounds
