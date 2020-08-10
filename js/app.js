@@ -1,4 +1,5 @@
 //configs
+let config
 const MAP_SIZE = 6;
 let app;
 let colors = ['./img/beer.png', './img/coffee.png', './img/martini.png', './img/coffee-mug.png', './img/teapot.png'];
@@ -21,7 +22,7 @@ let isSoundPlay = true;
 
 window.onload = function(){
     container = document.getElementById('container');
-    let config = {
+    config = {
         width: 450,//6 * 6
         height: 450,//6 * 6
         // width: 600, //8 * 8
@@ -34,21 +35,7 @@ window.onload = function(){
     //sound
     initSound();
 
-    soundBtn = new PIXI.Sprite.from(onOrDisable[1]);
-    soundBtn.x = config.width * 0.03;
-    soundBtn.y = 1;
-    soundBtn.on('pointerdown', soundOfforOn);
-    soundBtn.interactive = true;
-    app.stage.addChild(soundBtn);
-
-    if(isSoundPlay){
-        mainSound.play();
-        soundBtn.texture = PIXI.Texture.from(onOrDisable[1]);
-    }else{
-        soundBtn.texture = PIXI.Texture.from(onOrDisable[0]);
-    }
-
-    
+    initSoundBtn();
 
     //createMap
     createMap(players, colors); 
@@ -72,6 +59,23 @@ window.onload = function(){
 
 }
 
+// Sounds
+function initSoundBtn(){
+    soundBtn = new PIXI.Sprite.from(onOrDisable[1]);
+    soundBtn.x = config.width * 0.03;
+    soundBtn.y = 1;
+    soundBtn.on('pointerdown', soundOfforOn);
+    soundBtn.interactive = true;
+    app.stage.addChild(soundBtn);
+
+    if(isSoundPlay){
+        mainSound.play();
+        soundBtn.texture = PIXI.Texture.from(onOrDisable[1]);
+    }else{
+        soundBtn.texture = PIXI.Texture.from(onOrDisable[0]);
+    }
+}
+
 function soundOfforOn(){
     isSoundPlay = !isSoundPlay;
     if(isSoundPlay){
@@ -87,17 +91,17 @@ function initSound(){
     mainSound = new Howl({
         src: ['./sound/mainSound.mp3'],
         loop: true,
-        volume: 1,
+        volume: 0.8,
     });  
 
     goodChoiceSound = new Howl({
         src: ['./sound/GoodChoice.mp3'],
-        volume: 1,
+        volume: 0.5,
     });  
 
     noGoodChoiceSound = new Howl({
         src: ['./sound/noGoodChoice.mp3'],
-        volume: 1,
+        volume: 0.5,
     });
 
     theEndSound = new Howl({
@@ -106,6 +110,7 @@ function initSound(){
     });  
 }
 
+// GamePlay
 function createMap(players){
     let x = 10;
     let y = 40;
@@ -170,6 +175,10 @@ function clickFunction(player){
                 fallObjs();
                 setTimeout(renderMap, 510);
                 addScore();
+                
+                if(isSoundPlay){
+                    goodChoiceSound.play();
+                }
 
                 // setTimeout(sechNine, 600);
             }else{
@@ -179,6 +188,9 @@ function clickFunction(player){
                 }else{
                     console.log("or is not Three");
                     badStepAnimation(tempObj, player);
+                }
+                if(isSoundPlay){
+                    noGoodChoiceSound.play();
                 }
             }       
             break;
