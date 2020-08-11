@@ -576,11 +576,11 @@ function fallAnimation(iMinus, tempObj){
         for(let j = 0; j < MAP_SIZE; j++){
             let fallTiles = freeSpaceBelow(i, j);
             if(fallTiles > 0){
-                if(iMinus != -1){
-                    players[i][j].Animation = new TweenMax.to(players[i][j], 0.33, {
-                        y: players[i][j].y + fallTiles * 70,//70px = размер картинки + отступ  
-                        ease: "power2.inOut",
-                    });
+                    if(iMinus != -1){
+                        players[i][j].Animation = new TweenMax.to(players[i][j], 0.33, {
+                            y: players[i][j].y + fallTiles * 70,//70px = размер картинки + отступ  
+                            ease: "power2.inOut",
+                    }); 
                 }else{
                     if((players[i][j].i == tempObj.i) && (players[i][j].j == tempObj.j)){
                         players[i][j].Animation = new TweenMax.to(players[i][j], 0.33, {
