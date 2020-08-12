@@ -1,6 +1,8 @@
 //configs
 let config
-const MAP_SIZE = 6;
+let MAP_SIZE = 6;
+let MAP_WIDTH = 410;
+let MAP_HEIGHT = 450;
 let app;
 let menu;
 let colors = ['./img/beer.png', './img/coffee.png', './img/martini.png', './img/coffee-mug.png', './img/teapot.png'];
@@ -73,12 +75,14 @@ function initChooseTime(){
     timeSceneText[2].interactive = true;
     timeSceneText[2].on('pointerdown', ()=>{
         gameTime = 2;
-        timeSceneText[2].Animation = new TweenMax.to(timeSceneText[2], 1, {
+        timeSceneText[2].Animation = new TweenMax.to(timeSceneText[2], 0.7, {
             x: timeSceneText[2].x + 100, 
             alpha: 0,
             ease: "power2.inOut",
         });
-        clearInitChooseTime(timeSceneText);
+        setTimeout(()=>{
+            clearInitChooseTime(timeSceneText);
+        }, 700); 
     });
     menu.stage.addChild(timeSceneText[2]);
 
@@ -88,12 +92,14 @@ function initChooseTime(){
     timeSceneText[3].interactive = true;
     timeSceneText[3].on('pointerdown', ()=>{
         gameTime = 60;
-        timeSceneText[3].Animation = new TweenMax.to(timeSceneText[3], 1, {
+        timeSceneText[3].Animation = new TweenMax.to(timeSceneText[3], 0.7, {
             x: timeSceneText[3].x + 100, 
             alpha: 0,
             ease: "power2.inOut",
         });
-        clearInitChooseTime(timeSceneText);
+        setTimeout(()=>{
+            clearInitChooseTime(timeSceneText);
+        }, 700); 
     });
     menu.stage.addChild(timeSceneText[3]);
 
@@ -103,12 +109,14 @@ function initChooseTime(){
     timeSceneText[4].interactive = true;
     timeSceneText[4].on('pointerdown', ()=>{
         gameTime = 120;
-        timeSceneText[4].Animation = new TweenMax.to(timeSceneText[4], 1, {
+        timeSceneText[4].Animation = new TweenMax.to(timeSceneText[4], 0.7, {
             x: timeSceneText[4].x + 100, 
             alpha: 0,
             ease: "power2.inOut",
         });
-        clearInitChooseTime(timeSceneText);
+        setTimeout(()=>{
+            clearInitChooseTime(timeSceneText);
+        }, 700); 
     });
     menu.stage.addChild(timeSceneText[4]);
     
@@ -117,7 +125,112 @@ function initChooseTime(){
 function clearInitChooseTime(timeSceneText){
     timeSceneText.forEach((el)=>{
         el.Animation = new TweenMax.to(el, 1, {
-            x: timeSceneText[3].x - 100, 
+            x: el.x - 100, 
+            alpha: 0,
+            ease: "power2.inOut",
+        });
+    });
+    setTimeout(initChooseGameSize, 1000);
+}
+
+function initChooseGameSize(){
+    let sizeSceneText = [];
+    sizeSceneText[0] = new PIXI.Sprite.from('./img/mapSize.png');
+    sizeSceneText[1] = new PIXI.Text(`Choose game map size`,{fontFamily : 'Arial', fontSize: 32, fill : 0xFFFFFF, align: 'center'});
+    sizeSceneText[2] = new PIXI.Text(`6 * 6`,{fontFamily : 'Arial', fontSize: 32, fill : 0xFFFFFF});
+    sizeSceneText[3] = new PIXI.Text(`8 * 8`,{fontFamily : 'Arial', fontSize: 32, fill : 0xFFFFFF});
+    sizeSceneText[4] = new PIXI.Text(`10 * 10`,{fontFamily : 'Arial', fontSize: 32, fill : 0xFFFFFF});
+
+    sizeSceneText.forEach(el =>{
+        el.alpha = 0;
+    });
+    
+    sizeSceneText[0].x = config.width * 0.45 - 100;
+    sizeSceneText[0].y = config.height * 0.2;
+    sizeSceneText[0].Animation = new TweenMax.to(sizeSceneText[0].scale, 1, {
+        x: 1.3, 
+        y: 1.3, 
+        repeat: -1,
+        repeatDelay: 0.02,
+        ease: "power2.inOut",
+        yoyo: true,
+    });
+    menu.stage.addChild(sizeSceneText[0]);
+
+    sizeSceneText[1].x = config.width * 0.1 - 100;
+    sizeSceneText[1].y = config.height * 0.35;
+    menu.stage.addChild(sizeSceneText[1]);
+
+    sizeSceneText[2].x = config.width * 0.43 - 100;
+    sizeSceneText[2].y = config.height * 0.43;
+    sizeSceneText[2].interactive = true;
+    sizeSceneText[2].on('pointerdown', ()=>{
+        sizeSceneText[2].Animation = new TweenMax.to(sizeSceneText[2], 0.7, {
+            x: sizeSceneText[2].x + 100, 
+            alpha: 0,
+            ease: "power2.inOut",
+        });
+        setTimeout(()=>{
+            clearInitChooseGameSize(sizeSceneText);
+        }, 700); 
+        
+    });
+    menu.stage.addChild(sizeSceneText[2]);
+
+    sizeSceneText[3].x = config.width * 0.43 - 100;
+    sizeSceneText[3].y = config.height * 0.53;
+    sizeSceneText[3].interactive = true;
+    sizeSceneText[3].on('pointerdown', ()=>{
+        MAP_SIZE = 8;
+        MAP_WIDTH = 550;
+        MAP_HEIGHT = 590;
+        sizeSceneText[3].Animation = new TweenMax.to(sizeSceneText[3], 0.7, {
+            x: sizeSceneText[3].x + 100, 
+            alpha: 0,
+            ease: "power2.inOut",
+        });
+        setTimeout(()=>{
+            clearInitChooseGameSize(sizeSceneText);
+        }, 700);
+    });
+    menu.stage.addChild(sizeSceneText[3]);
+
+    sizeSceneText[4].x = config.width * 0.39 - 100;
+    sizeSceneText[4].y = config.height * 0.63;
+    sizeSceneText[4].interactive = true;
+    sizeSceneText[4].on('pointerdown', ()=>{
+        MAP_SIZE = 10;
+        MAP_WIDTH = 690;
+        MAP_HEIGHT = 730;
+        sizeSceneText[4].Animation = new TweenMax.to(sizeSceneText[4], 0.7, {
+            x: sizeSceneText[4].x + 100, 
+            alpha: 0,
+            ease: "power2.inOut",
+        });
+        setTimeout(()=>{
+            clearInitChooseGameSize(sizeSceneText);
+        }, 700);
+    });
+
+    showChooseGameSize(sizeSceneText);
+
+    menu.stage.addChild(sizeSceneText[4]);
+}
+
+function showChooseGameSize(sizeSceneText){
+    sizeSceneText.forEach((el) =>{
+        el.Animation = new TweenMax.to(el, 0.7, {
+            alpha: 1,
+            x: el.x + 100, 
+            ease: "power2.inOut",
+        });
+    })
+}
+
+function clearInitChooseGameSize(sizeSceneText){
+    sizeSceneText.forEach((el)=>{
+        el.Animation = new TweenMax.to(el, 1, {
+            x: el.x - 100, 
             alpha: 0,
             ease: "power2.inOut",
         });
@@ -130,8 +243,8 @@ function startGame(){
     time = gameTime;
 
     config = {
-        width: 410,//6 * 6
-        height: 450,//6 * 6
+        width: MAP_WIDTH,
+        height: MAP_HEIGHT,
         backgroundColor: 0x131317,
     }
 
@@ -161,10 +274,6 @@ function startGame(){
     }
 
     container.appendChild(app.view);
-}
-
-function newGame(){
-
 }
 
 function initRestartBtn(){
@@ -219,7 +328,7 @@ function gameOver(){
     scoreText.text = `Final score:\n ${score}`;
     scoreText.style = {fontFamily : 'Arial', fontSize: 42, fill : 0xFFFFFF, align : 'center'};
     scoreText.Animation = new TweenMax.to(scoreText, 1, {
-        x: config.width * 0.25,
+        x: config.width * 0.5 - 110,
         y: config.height * 0.25, 
         ease: Power3.easeOut,
     });
