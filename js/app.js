@@ -16,6 +16,7 @@ let players = [];
 let container;
 let gameTime = 30;
 let time;
+let updateInterval;
 
 //Text
 let scoreText;
@@ -240,6 +241,7 @@ function clearInitChooseGameSize(sizeSceneText){
 
 // GamePlay
 function startGame(){
+    let isPlay = true;
     time = gameTime;
 
     config = {
@@ -261,6 +263,8 @@ function startGame(){
     //createMap
     createMap(players, colors); 
     
+    update();
+
     // timer
     initTimerText();
     startTimer();
@@ -275,6 +279,28 @@ function startGame(){
 
     container.appendChild(app.view);
 }
+
+function update(){
+    updateInterval =  setInterval(()=>{
+       if(isThreeUpdate()){
+           console.log("Три на карте!");
+            deleteThree();                
+            deadAnimation();
+            fallAnimationUpdate();
+            fallObjs();
+            setTimeout(renderMapUpdate, 510);
+
+            let tempPlayersId = players.map(function(arr) {
+                return arr.map(el =>{
+                    return el.id;
+                });
+            });
+            console.log(tempPlayersId);
+        }
+        
+    }, 700);
+}
+
 
 function initRestartBtn(){
     restartBtn = new PIXI.Sprite.from(restart[0]);
@@ -298,6 +324,7 @@ function initRestartBtn(){
 }
 
 function gameOver(){
+    clearInterval(updateInterval);
     if(isSoundPlay){
         mainSound.pause();
         theEndSound.play();
@@ -397,11 +424,9 @@ function createMap(players){
 
 
 function clickFunction(player){
-    
     switch(playerClick){
         case 2:{
             playerClick = 1;
-            
             if(player.i == tempObj.i && player.j == tempObj.j){
                  killPlayerAnimation(tempObj);
             }
@@ -412,12 +437,11 @@ function clickFunction(player){
                 changeIandJ(tempObj, player);
                 playAnimationMove(tempObj, player);
                 swapObject(tempObj, player);
-                deleteThree();                
-                deadAnimation(tempObj, player);
-                // setTimeout(fallAnimation, 10);
-                fallAnimation(iMinus, tempObj);
-                fallObjs();
-                setTimeout(renderMap, 510);
+                // deleteThree();                
+                // deadAnimation(tempObj, player);
+                // fallAnimation(iMinus, tempObj);
+                // fallObjs();
+                // setTimeout(renderMap, 510);
                 addScore();
                 
                 if(isSoundPlay){
@@ -469,6 +493,7 @@ function addScore(){
 }
 
 function renderMap(){    
+    console.log('render map')
     let yPos = [40];
     for (let z = 0; z < MAP_SIZE-1; z++) {
         yPos.push(yPos[z] + 70);
@@ -481,7 +506,7 @@ function renderMap(){
                 players[i][j].y = yPos[i];
                 let random = Math.floor(Math.random() * colors.length);
                 if(j > 1){
-                    if(random == players[i][j-1].id && random == players[i][j-1].id){
+                    if(random == players[i][j-1].id && random == players[i][j-2].id){
                         if(random < colors.length-1){
                             random++;
                         }else{
@@ -496,7 +521,6 @@ function renderMap(){
                     x: 1.0, 
                     y: 1.0, 
                     ease: "power2.inOut",
-                    // ease: Power3.easeOut,
                     yoyo: true,
                 });
             }else{
@@ -505,6 +529,54 @@ function renderMap(){
             } 
         }
     }
+}
+
+function renderMapUpdate(){    
+    console.log('render map')
+    let yPos = [40];
+    for (let z = 0; z < MAP_SIZE-1; z++) {
+        yPos.push(yPos[z] + 70);
+    }
+
+    for (let i = 0; i < MAP_SIZE; i++) {
+        for (let j = 0; j < MAP_SIZE; j++) {
+            if(players[i][j].id == 9){
+                players[i][j].x = 10 + j * 70;
+                players[i][j].y = yPos[i];
+                let random = Math.floor(Math.random() * colors.length);
+                if(j > 1){
+                    if(random == players[i][j-1].id && random == players[i][j-2].id){
+                        if(random < colors.length-1){
+                            random++;
+                        }else{
+                            random--;
+                        }
+                    }
+                }
+                players[i][j].id = random;
+                players[i][j].texture = PIXI.Texture.from(colors[random]);
+
+                players[i][j].Animation = new TweenMax.to(players[i][j].scale, 0.5, {
+                    x: 1.0, 
+                    y: 1.0, 
+                    ease: "power2.inOut",
+                    yoyo: true,
+                });
+            }else{
+                players[i][j].x = 10 + j * 70;
+                players[i][j].y = yPos[i];
+                players[i][j].alpha = 1;
+                players[i][j].texture = PIXI.Texture.from(colors[players[i][j].id]);
+            } 
+        }
+    }
+
+    let tempPlayersId = players.map(function(arr) {
+        return arr.map(el =>{
+            return el.id;
+        });
+    });
+    console.log(tempPlayersId);
 }
 
 function sechNine(){
@@ -632,6 +704,37 @@ function swapId(tempObj, player){
     }
 }
 
+function isThreeUpdate(){
+    let col = 0;
+    let tempPlayersId = players.map(function(arr) {
+        return arr.map(el =>{
+            return el.id;
+        });
+    });
+
+    for (let i = 0; i < tempPlayersId.length; i++) {
+        for (let j = 0; j < tempPlayersId[i].length; j++) {
+            if(tempPlayersId[i][j] == tempPlayersId[i][j+1] && tempPlayersId[i][j] == tempPlayersId[i][j+2]){
+                col++;
+            }
+        }
+    }
+
+    for (let i = 0; i < tempPlayersId.length; i++) {
+        for (let j = 0; j < tempPlayersId[i].length-2; j++) {
+            if(tempPlayersId[j][i] == tempPlayersId[j+1][i] && tempPlayersId[j][i] == tempPlayersId[j+2][i]){
+                col++;
+            }
+        }
+    }
+
+    if(col > 0){
+        return true;
+    }else{
+        return false;
+    }
+}
+
 function isThree(tempObj, player){
     let col = 0;
     let tempPlayersId = players.map(function(arr) {
@@ -657,21 +760,6 @@ function isThree(tempObj, player){
             }
         }
     }
-    // for (let i = 0; i < tempPlayersId.length; i++) {
-    //     for (let j = 0; j < tempPlayersId[i].length; j++) {
-    //         if(tempPlayersId[i][j] == tempPlayersId[i][j+1] && tempPlayersId[i][j] == tempPlayersId[i][j+2]){
-    //             col++;
-    //         }
-    //     }
-    // }
-
-    // for (let i = 0; i < tempPlayersId.length; i++) {
-    //     for (let j = 0; j < tempPlayersId[i].length-2; j++) {
-    //         if(tempPlayersId[j][i] == tempPlayersId[j+1][i] && tempPlayersId[j][i] == tempPlayersId[j+2][i]){
-    //             col++;
-    //         }
-    //     }
-    // }
 
     if(col > 0){
         return true;
@@ -807,6 +895,20 @@ function fallAnimation(iMinus, tempObj){
     }
 }
 
+function fallAnimationUpdate(){
+    for(let i = MAP_SIZE - 2; i >= 0; i--){
+        for(let j = 0; j < MAP_SIZE; j++){
+            let fallTiles = freeSpaceBelow(i, j);
+            if(fallTiles > 0){
+                players[i][j].Animation = new TweenMax.to(players[i][j], 0.33, {
+                    y: players[i][j].y + fallTiles * 70,//70px = размер картинки + отступ  
+                    ease: "power2.inOut",
+                }); 
+            }
+        }
+    }
+}
+
 function freeSpaceBelow(row, col){
     let result = 0;
     for(let i = row + 1; i < MAP_SIZE; i++){
@@ -817,7 +919,7 @@ function freeSpaceBelow(row, col){
     return result;
 }
 
-function deadAnimation(tempObj, player){
+function deadAnimation(){
     for (let i = 0; i < MAP_SIZE; i++) {
         for (let j = 0; j < MAP_SIZE; j++) {
             if(players[i][j].id == 9 ){
