@@ -2,6 +2,7 @@
 let config
 const MAP_SIZE = 6;
 let app;
+let menu;
 let colors = ['./img/beer.png', './img/coffee.png', './img/martini.png', './img/coffee-mug.png', './img/teapot.png'];
 let onOrDisable = ['./img/sound-off.png', './img/sound-on.png'];
 let restart = ['./img/restart.png'];
@@ -26,8 +27,102 @@ let theEndSound;
 let isSoundPlay = false;
 
 window.onload = function(){
+    initChooseTime();
+}
+
+function initChooseTime(){
     container = document.getElementById('container');
-    startGame();
+    config = {
+        width: 410,//6 * 6
+        height: 450,//6 * 6
+        backgroundColor: 0x131317,
+    }
+
+    menu = new PIXI.Application(config);
+    container.appendChild(menu.view);
+
+    if(container.firstChild != null){
+        let child = container.firstChild;
+        container.removeChild(child);
+    }
+
+    container.appendChild(menu.view);
+
+    let timeSceneText = [];
+    timeSceneText[0] = new PIXI.Sprite.from('./img/chooseTime.png');
+    timeSceneText[0].x = config.width * 0.45;
+    timeSceneText[0].y = config.height * 0.2;
+    timeSceneText[0].Animation = new TweenMax.to(timeSceneText[0].scale, 1, {
+        x: 1.3, 
+        y: 1.3, 
+        repeat: -1,
+        repeatDelay: 0.02,
+        ease: "power2.inOut",
+        yoyo: true,
+    });
+    menu.stage.addChild(timeSceneText[0]);
+
+    timeSceneText[1] = new PIXI.Text(`Choose game time\n(seconds)`,{fontFamily : 'Arial', fontSize: 32, fill : 0xFFFFFF, align: 'center'});
+    timeSceneText[1].x = config.width * 0.2;
+    timeSceneText[1].y = config.height * 0.35;
+    menu.stage.addChild(timeSceneText[1]);
+
+    timeSceneText[2] = new PIXI.Text(`30`,{fontFamily : 'Arial', fontSize: 32, fill : 0xFFFFFF});
+    timeSceneText[2].x = config.width * 0.46;
+    timeSceneText[2].y = config.height * 0.53;
+    timeSceneText[2].interactive = true;
+    timeSceneText[2].on('pointerdown', ()=>{
+        gameTime = 2;
+        timeSceneText[2].Animation = new TweenMax.to(timeSceneText[2], 1, {
+            x: timeSceneText[2].x + 100, 
+            alpha: 0,
+            ease: "power2.inOut",
+        });
+        clearInitChooseTime(timeSceneText);
+    });
+    menu.stage.addChild(timeSceneText[2]);
+
+    timeSceneText[3] = new PIXI.Text(`60`,{fontFamily : 'Arial', fontSize: 32, fill : 0xFFFFFF});
+    timeSceneText[3].x = config.width * 0.46;
+    timeSceneText[3].y = config.height * 0.63;
+    timeSceneText[3].interactive = true;
+    timeSceneText[3].on('pointerdown', ()=>{
+        gameTime = 60;
+        timeSceneText[3].Animation = new TweenMax.to(timeSceneText[3], 1, {
+            x: timeSceneText[3].x + 100, 
+            alpha: 0,
+            ease: "power2.inOut",
+        });
+        clearInitChooseTime(timeSceneText);
+    });
+    menu.stage.addChild(timeSceneText[3]);
+
+    timeSceneText[4] = new PIXI.Text(`120`,{fontFamily : 'Arial', fontSize: 32, fill : 0xFFFFFF});
+    timeSceneText[4].x = config.width * 0.44;
+    timeSceneText[4].y = config.height * 0.73;
+    timeSceneText[4].interactive = true;
+    timeSceneText[4].on('pointerdown', ()=>{
+        gameTime = 120;
+        timeSceneText[4].Animation = new TweenMax.to(timeSceneText[4], 1, {
+            x: timeSceneText[4].x + 100, 
+            alpha: 0,
+            ease: "power2.inOut",
+        });
+        clearInitChooseTime(timeSceneText);
+    });
+    menu.stage.addChild(timeSceneText[4]);
+    
+}
+
+function clearInitChooseTime(timeSceneText){
+    timeSceneText.forEach((el)=>{
+        el.Animation = new TweenMax.to(el, 1, {
+            x: timeSceneText[3].x - 100, 
+            alpha: 0,
+            ease: "power2.inOut",
+        });
+    });
+    setTimeout(startGame, 1000);
 }
 
 // GamePlay
@@ -68,12 +163,20 @@ function startGame(){
     container.appendChild(app.view);
 }
 
+function newGame(){
+
+}
+
 function initRestartBtn(){
     restartBtn = new PIXI.Sprite.from(restart[0]);
     restartBtn.x = config.width * 0.45;
     restartBtn.y = config.height * 0.5;
     restartBtn.interactive = true;
-    restartBtn.on('pointerdown', startGame);
+    // restartBtn.on('pointerdown', startGame);
+    restartBtn.on('pointerdown', ()=>{
+        console.log("GAME OVER INIT TIME");
+        initChooseTime();
+    });
     restartBtn.Animation = new TweenMax.to(restartBtn.scale, 1, {
         x: 1.3, 
         y: 1.3, 
