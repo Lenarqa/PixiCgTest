@@ -75,7 +75,7 @@ function initChooseTime(){
     timeSceneText[2].y = config.height * 0.53;
     timeSceneText[2].interactive = true;
     timeSceneText[2].on('pointerdown', ()=>{
-        gameTime = 2;
+        gameTime = 30;
         timeSceneText[2].Animation = new TweenMax.to(timeSceneText[2], 0.7, {
             x: timeSceneText[2].x + 100, 
             alpha: 0,
@@ -125,13 +125,13 @@ function initChooseTime(){
 
 function clearInitChooseTime(timeSceneText){
     timeSceneText.forEach((el)=>{
-        el.Animation = new TweenMax.to(el, 1, {
+        el.Animation = new TweenMax.to(el, 0.700, {
             x: el.x - 100, 
             alpha: 0,
             ease: "power2.inOut",
         });
     });
-    setTimeout(initChooseGameSize, 1000);
+    setTimeout(initChooseGameSize, 700);
 }
 
 function initChooseGameSize(){
@@ -230,13 +230,13 @@ function showChooseGameSize(sizeSceneText){
 
 function clearInitChooseGameSize(sizeSceneText){
     sizeSceneText.forEach((el)=>{
-        el.Animation = new TweenMax.to(el, 1, {
+        el.Animation = new TweenMax.to(el, 0.7, {
             x: el.x - 100, 
             alpha: 0,
             ease: "power2.inOut",
         });
     });
-    setTimeout(startGame, 1000);
+    setTimeout(startGame, 700);
 }
 
 // GamePlay
@@ -284,11 +284,14 @@ function update(){
     updateInterval =  setInterval(()=>{
        if(isThreeUpdate()){
            console.log("Три на карте!");
-            deleteThree();                
-            deadAnimation();
-            fallAnimationUpdate();
-            fallObjs();
-            setTimeout(renderMapUpdate, 510);
+            deleteThree();  
+            if(deadAnimation()){
+                fallAnimationUpdate();
+                fallObjs();
+                setTimeout(renderMapUpdate, 510);
+                
+            }              
+            
 
             let tempPlayersId = players.map(function(arr) {
                 return arr.map(el =>{
@@ -896,6 +899,7 @@ function fallAnimation(iMinus, tempObj){
 }
 
 function fallAnimationUpdate(){
+    // let tl = new TimelineMax();
     for(let i = MAP_SIZE - 2; i >= 0; i--){
         for(let j = 0; j < MAP_SIZE; j++){
             let fallTiles = freeSpaceBelow(i, j);
@@ -919,18 +923,31 @@ function freeSpaceBelow(row, col){
     return result;
 }
 
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
 function deadAnimation(){
+    let tl = new TimelineMax();
+    // tl.to('.blue', 2, {x:200} )
     for (let i = 0; i < MAP_SIZE; i++) {
+        let delayTime = 0.2;
         for (let j = 0; j < MAP_SIZE; j++) {
             if(players[i][j].id == 9 ){
-                players[i][j].Animation = new TweenMax.to(players[i][j].scale, 0.75, {
+                players[i][j].Animation = tl.to(players[i][j].scale, 0.2, {
                     x: 0.0,
                     y: 0.0, 
+                    // delay: delayTime,
                     ease: Power3.easeOut
                 });
             }
+            // if(i == MAP_SIZE - 1 && j == MAP_SIZE - 1){
+            //     console.log("hello---------------------")
+            //     setTimeout(()=>{}, 1000);
+            // }
         }
     }
+    return true;
 }
 
 function playAnimationMove(tempObj, player){
