@@ -292,12 +292,12 @@ function update(){
                 fallObjs();
                 setTimeout(renderMapUpdate, 510);
                 
-                let tempPlayersId = players.map(function(arr) {
-                    return arr.map(el =>{
-                        return el.id;
-                    });
-                });
-                console.log(tempPlayersId);
+                // let tempPlayersId = players.map(function(arr) {
+                //     return arr.map(el =>{
+                //         return el.id;
+                //     });
+                // });
+                // console.log(tempPlayersId);
            })
         }
     }, 1300);
@@ -558,12 +558,19 @@ function renderMapUpdate(){
                 players[i][j].id = random;
                 players[i][j].texture = PIXI.Texture.from(colors[random]);
 
-                players[i][j].Animation = new TweenMax.to(players[i][j].scale, 0.5, {
+                gsap.to(players[i][j].scale, 0.5, {
                     x: 1.0, 
                     y: 1.0, 
                     ease: "power2.inOut",
-                    yoyo: true,
+                    // yoyo: true,
                 });
+                gsap.from(players[i][j], 
+                {
+                    y: players[i][j].y-400, ease: "power2.inOut"
+                }, 
+                {
+                    y: players[i][j].y, alpha: 1, ease: "power2.inOut", duration: 0.5
+                })
             }else{
                 players[i][j].x = 10 + j * 70;
                 players[i][j].y = yPos[i];
@@ -905,10 +912,18 @@ function fallAnimationUpdate(){
             //     tl.to(players[i][j], 0.1,{delay: 0.2})   
             // }
             if(fallTiles > 0){
-                players[i][j].Animation = new TweenMax.to(players[i][j], 0.5, {
-                    y: players[i][j].y + fallTiles * 70,//70px = размер картинки + отступ  
-                    ease: "power2.inOut",
-                }); 
+                gsap.from(players[i][j], 
+                    {
+                        y: players[i][j].y, ease: "power2.inOut"
+                    }, 
+                    {
+                        y: players[i][j].y + fallTiles * 70, alpha: 1, ease: "power2.inOut", duration: 0.5
+                    }
+                );
+                // gsap.to(players[i][j], 0.5, {
+                //     y: players[i][j].y + fallTiles * 70,//70px = размер картинки + отступ  
+                //     ease: "power2.inOut",
+                // }); 
             }
         }
     }
@@ -929,22 +944,19 @@ function sleep(ms) {
   }
 
 function deadAnimation(){
-    let tl = new TimelineMax();
-    // tl.to('.blue', 2, {x:200} )
     for (let i = 0; i < MAP_SIZE; i++) {
-        // let delayTime = 0.2;
         for (let j = 0; j < MAP_SIZE; j++) {
             if(players[i][j].id == 9 ){
-                players[i][j].Animation = new TweenMax.to(players[i][j].scale, 0.2, {
+                gsap.to(players[i][j].scale, {
+                    stagger: {
+                        each: 0.1,
+                    },
+                    duration: 0.2,
                     x: 0.0,
-                    y: 0.0, 
+                    y: 0.0,
                     ease: Power3.easeOut
                 });
             }
-            // if(i == MAP_SIZE - 1 && j == MAP_SIZE - 1){
-            //     console.log("hello---------------------")
-            //     setTimeout(()=>{}, 1000);
-            // }
         }
     }
 }
