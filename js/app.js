@@ -282,26 +282,25 @@ function startGame(){
 
 function update(){
     updateInterval =  setInterval(()=>{
-       if(isThreeUpdate()){
-           console.log("Три на карте!");
-            deleteThree();  
-            if(deadAnimation()){
+        if(isThreeUpdate()){
+            setTimeout(()=>{
+                console.log("Три на карте!");
+                deleteThree(); 
+                deadAnimation()
+                
                 fallAnimationUpdate();
                 fallObjs();
                 setTimeout(renderMapUpdate, 510);
                 
-            }              
-            
-
-            let tempPlayersId = players.map(function(arr) {
-                return arr.map(el =>{
-                    return el.id;
+                let tempPlayersId = players.map(function(arr) {
+                    return arr.map(el =>{
+                        return el.id;
+                    });
                 });
-            });
-            console.log(tempPlayersId);
+                console.log(tempPlayersId);
+           })
         }
-        
-    }, 700);
+    }, 1300);
 }
 
 
@@ -899,12 +898,14 @@ function fallAnimation(iMinus, tempObj){
 }
 
 function fallAnimationUpdate(){
-    // let tl = new TimelineMax();
     for(let i = MAP_SIZE - 2; i >= 0; i--){
         for(let j = 0; j < MAP_SIZE; j++){
             let fallTiles = freeSpaceBelow(i, j);
+            // if(i == 1 && j == 1){
+            //     tl.to(players[i][j], 0.1,{delay: 0.2})   
+            // }
             if(fallTiles > 0){
-                players[i][j].Animation = new TweenMax.to(players[i][j], 0.33, {
+                players[i][j].Animation = new TweenMax.to(players[i][j], 0.5, {
                     y: players[i][j].y + fallTiles * 70,//70px = размер картинки + отступ  
                     ease: "power2.inOut",
                 }); 
@@ -931,13 +932,12 @@ function deadAnimation(){
     let tl = new TimelineMax();
     // tl.to('.blue', 2, {x:200} )
     for (let i = 0; i < MAP_SIZE; i++) {
-        let delayTime = 0.2;
+        // let delayTime = 0.2;
         for (let j = 0; j < MAP_SIZE; j++) {
             if(players[i][j].id == 9 ){
-                players[i][j].Animation = tl.to(players[i][j].scale, 0.2, {
+                players[i][j].Animation = new TweenMax.to(players[i][j].scale, 0.2, {
                     x: 0.0,
                     y: 0.0, 
-                    // delay: delayTime,
                     ease: Power3.easeOut
                 });
             }
@@ -947,7 +947,6 @@ function deadAnimation(){
             // }
         }
     }
-    return true;
 }
 
 function playAnimationMove(tempObj, player){
