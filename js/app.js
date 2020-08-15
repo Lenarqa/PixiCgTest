@@ -196,7 +196,7 @@ function initChooseGameSize(){
     });
     menu.stage.addChild(sizeSceneText[3]);
 
-    sizeSceneText[4].x = config.width * 0.39 - 100;
+    sizeSceneText[4].x = config.width * 0.43 - 100;
     sizeSceneText[4].y = config.height * 0.63;
     sizeSceneText[4].interactive = true;
     sizeSceneText[4].on('pointerdown', ()=>{
@@ -912,14 +912,23 @@ function fallAnimationUpdate(tl){
             //     tl.to(players[i][j], 0.1,{delay: 0.2})   
             // }
             if(fallTiles > 0){
-                tl.staggerTo(players[i][j], 
-                    {
-                        y: players[i][j].y, ease: "power2.inOut"
-                    }, 
-                    {
+                // tl.staggerTo(players[i][j], 0.1,
+                // {
+                //     y: players[i][j].y, ease: "power2.inOut"
+                // });
+
+                tl.staggerTo(players[i][j], 0.1,{
                         y: players[i][j].y + fallTiles * 70, alpha: 1, ease: "power2.inOut", duration: 0.5
                     }
-                );
+                , 0.05);
+                // tl.staggerTo(players[i][j], 
+                //     {
+                //         y: players[i][j].y, ease: "power2.inOut"
+                //     }, 
+                //     {
+                //         y: players[i][j].y + fallTiles * 70, alpha: 1, ease: "power2.inOut", duration: 0.5
+                //     }
+                // );
                 // gsap.to(players[i][j], 0.5, {
                 //     y: players[i][j].y + fallTiles * 70,//70px = размер картинки + отступ  
                 //     ease: "power2.inOut",
