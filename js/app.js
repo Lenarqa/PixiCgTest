@@ -139,8 +139,8 @@ function initChooseGameSize(){
     sizeSceneText[0] = new PIXI.Sprite.from('./img/mapSize.png');
     sizeSceneText[1] = new PIXI.Text(`Choose game map size`,{fontFamily : 'Arial', fontSize: 32, fill : 0xFFFFFF, align: 'center'});
     sizeSceneText[2] = new PIXI.Text(`6 * 6`,{fontFamily : 'Arial', fontSize: 32, fill : 0xFFFFFF});
-    sizeSceneText[3] = new PIXI.Text(`8 * 8`,{fontFamily : 'Arial', fontSize: 32, fill : 0xFFFFFF});
-    sizeSceneText[4] = new PIXI.Text(`10 * 10`,{fontFamily : 'Arial', fontSize: 32, fill : 0xFFFFFF});
+    sizeSceneText[3] = new PIXI.Text(`7 * 7`,{fontFamily : 'Arial', fontSize: 32, fill : 0xFFFFFF});
+    sizeSceneText[4] = new PIXI.Text(`8 * 8`,{fontFamily : 'Arial', fontSize: 32, fill : 0xFFFFFF});
 
     sizeSceneText.forEach(el =>{
         el.alpha = 0;
@@ -182,9 +182,9 @@ function initChooseGameSize(){
     sizeSceneText[3].y = config.height * 0.53;
     sizeSceneText[3].interactive = true;
     sizeSceneText[3].on('pointerdown', ()=>{
-        MAP_SIZE = 8;
-        MAP_WIDTH = 550;
-        MAP_HEIGHT = 590;
+        MAP_SIZE = 7;
+        MAP_WIDTH = 480;
+        MAP_HEIGHT = 520;
         sizeSceneText[3].Animation = new TweenMax.to(sizeSceneText[3], 0.7, {
             x: sizeSceneText[3].x + 100, 
             alpha: 0,
@@ -200,9 +200,9 @@ function initChooseGameSize(){
     sizeSceneText[4].y = config.height * 0.63;
     sizeSceneText[4].interactive = true;
     sizeSceneText[4].on('pointerdown', ()=>{
-        MAP_SIZE = 10;
-        MAP_WIDTH = 690;
-        MAP_HEIGHT = 730;
+        MAP_SIZE = 8;
+        MAP_WIDTH = 550;
+        MAP_HEIGHT = 590;
         sizeSceneText[4].Animation = new TweenMax.to(sizeSceneText[4], 0.7, {
             x: sizeSceneText[4].x + 100, 
             alpha: 0,
@@ -918,7 +918,7 @@ function fallAnimationUpdate(tl){
                     }, 
                     {
                         y: players[i][j].y + fallTiles * 70, alpha: 1, ease: "power2.inOut", duration: 0.5
-                    },
+                    }
                 );
                 // gsap.to(players[i][j], 0.5, {
                 //     y: players[i][j].y + fallTiles * 70,//70px = размер картинки + отступ  
