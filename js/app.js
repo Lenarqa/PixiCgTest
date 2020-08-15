@@ -286,9 +286,9 @@ function update(){
             setTimeout(()=>{
                 console.log("Три на карте!");
                 deleteThree(); 
-                deadAnimation()
+                let tl = deadAnimation()
                 
-                fallAnimationUpdate();
+                fallAnimationUpdate(tl);
                 fallObjs();
                 setTimeout(renderMapUpdate, 510);
                 
@@ -904,7 +904,7 @@ function fallAnimation(iMinus, tempObj){
     }
 }
 
-function fallAnimationUpdate(){
+function fallAnimationUpdate(tl){
     for(let i = MAP_SIZE - 2; i >= 0; i--){
         for(let j = 0; j < MAP_SIZE; j++){
             let fallTiles = freeSpaceBelow(i, j);
@@ -912,13 +912,13 @@ function fallAnimationUpdate(){
             //     tl.to(players[i][j], 0.1,{delay: 0.2})   
             // }
             if(fallTiles > 0){
-                gsap.from(players[i][j], 
+                tl.staggerTo(players[i][j], 
                     {
                         y: players[i][j].y, ease: "power2.inOut"
                     }, 
                     {
                         y: players[i][j].y + fallTiles * 70, alpha: 1, ease: "power2.inOut", duration: 0.5
-                    }
+                    },
                 );
                 // gsap.to(players[i][j], 0.5, {
                 //     y: players[i][j].y + fallTiles * 70,//70px = размер картинки + отступ  
@@ -944,21 +944,27 @@ function sleep(ms) {
   }
 
 function deadAnimation(){
+    let tl = new TimelineLite();
     for (let i = 0; i < MAP_SIZE; i++) {
         for (let j = 0; j < MAP_SIZE; j++) {
             if(players[i][j].id == 9 ){
-                gsap.to(players[i][j].scale, {
-                    stagger: {
-                        each: 0.1,
-                    },
-                    duration: 0.2,
+                tl.staggerTo(players[i][j].scale, 0.1, {
                     x: 0.0,
                     y: 0.0,
-                    ease: Power3.easeOut
-                });
+                    ease: Power3.easeOut, 
+               }, 0.05); 
+                // gsap.to(players[i][j].scale, {
+                //     delay: 0.1,
+                //     duration: 0.2,
+                //     x: 0.0,
+                //     y: 0.0,
+                //     ease: Power3.easeOut
+                // });
             }
         }
     }
+    return tl;
+    // console.log(players[0][0].parent.classList)
 }
 
 function playAnimationMove(tempObj, player){
