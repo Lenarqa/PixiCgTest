@@ -292,6 +292,8 @@ function update(){
                 fallObjs();
                 setTimeout(renderMapUpdate, 510);
                 
+                addScore();
+                
                 // let tempPlayersId = players.map(function(arr) {
                 //     return arr.map(el =>{
                 //         return el.id;
@@ -444,7 +446,7 @@ function clickFunction(player){
                 // fallAnimation(iMinus, tempObj);
                 // fallObjs();
                 // setTimeout(renderMap, 510);
-                addScore();
+                // addScore();
                 
                 if(isSoundPlay){
                     goodChoiceSound.play();
