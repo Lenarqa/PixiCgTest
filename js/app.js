@@ -140,11 +140,11 @@ function initChooseGameSize(){
     sizeSceneText[1] = new PIXI.Text(`Choose game map size`,{fontFamily : 'Arial', fontSize: 32, fill : 0xFFFFFF, align: 'center'});
     sizeSceneText[2] = new PIXI.Text(`6 * 6`,{fontFamily : 'Arial', fontSize: 32, fill : 0xFFFFFF});
     sizeSceneText[3] = new PIXI.Text(`7 * 7`,{fontFamily : 'Arial', fontSize: 32, fill : 0xFFFFFF});
-    sizeSceneText[4] = new PIXI.Text(`8 * 8 *`,{fontFamily : 'Arial', fontSize: 32, fill : 0xFFFFFF});
-    sizeSceneText[5] = new PIXI.Text(`* beta version, has\nproblem with some\n animations`,{fontFamily : 'Arial', fontSize: 32, fill : 0xFFFFFF});
-    sizeSceneText[5].x = config.width * 0.1 - 100;
-    sizeSceneText[5].y = config.height * 0.73;
-    menu.stage.addChild(sizeSceneText[5]);
+    sizeSceneText[4] = new PIXI.Text(`8 * 8`,{fontFamily : 'Arial', fontSize: 32, fill : 0xFFFFFF});
+    // sizeSceneText[5] = new PIXI.Text(`* beta version, has\nproblem with some\n animations`,{fontFamily : 'Arial', fontSize: 32, fill : 0xFFFFFF});
+    // sizeSceneText[5].x = config.width * 0.1 - 100;
+    // sizeSceneText[5].y = config.height * 0.73;
+    // menu.stage.addChild(sizeSceneText[5]);
 
     sizeSceneText.forEach(el =>{
         el.alpha = 0;
@@ -170,6 +170,9 @@ function initChooseGameSize(){
     sizeSceneText[2].y = config.height * 0.43;
     sizeSceneText[2].interactive = true;
     sizeSceneText[2].on('pointerdown', ()=>{
+        MAP_SIZE = 6;
+        MAP_WIDTH = 410;
+        MAP_HEIGHT = 450;
         sizeSceneText[2].Animation = new TweenMax.to(sizeSceneText[2], 0.7, {
             x: sizeSceneText[2].x + 100, 
             alpha: 0,
@@ -923,10 +926,10 @@ function fallAnimationUpdate(tl){
                 //     y: players[i][j].y, ease: "power2.inOut"
                 // });
 
-                tl.staggerTo(players[i][j], 0.1,{
-                        y: players[i][j].y + fallTiles * 70, alpha: 1, ease: "power2.inOut", duration: 0.5
-                    }
-                , 0.05);
+                // tl.staggerTo(players[i][j], 0.1,{
+                //         y: players[i][j].y + fallTiles * 70, alpha: 1, ease: "power2.inOut", duration: 0.5
+                //     }
+                // , 0.05);
                 // tl.staggerTo(players[i][j], 
                 //     {
                 //         y: players[i][j].y, ease: "power2.inOut"
@@ -935,10 +938,10 @@ function fallAnimationUpdate(tl){
                 //         y: players[i][j].y + fallTiles * 70, alpha: 1, ease: "power2.inOut", duration: 0.5
                 //     }
                 // );
-                // gsap.to(players[i][j], 0.5, {
-                //     y: players[i][j].y + fallTiles * 70,//70px = размер картинки + отступ  
-                //     ease: "power2.inOut",
-                // }); 
+                gsap.to(players[i][j], 0.5, {
+                    y: players[i][j].y + fallTiles * 70,//70px = размер картинки + отступ  
+                    ease: "power2.inOut",
+                }); 
             }
         }
     }
