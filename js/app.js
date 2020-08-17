@@ -140,7 +140,11 @@ function initChooseGameSize(){
     sizeSceneText[1] = new PIXI.Text(`Choose game map size`,{fontFamily : 'Arial', fontSize: 32, fill : 0xFFFFFF, align: 'center'});
     sizeSceneText[2] = new PIXI.Text(`6 * 6`,{fontFamily : 'Arial', fontSize: 32, fill : 0xFFFFFF});
     sizeSceneText[3] = new PIXI.Text(`7 * 7`,{fontFamily : 'Arial', fontSize: 32, fill : 0xFFFFFF});
-    sizeSceneText[4] = new PIXI.Text(`8 * 8`,{fontFamily : 'Arial', fontSize: 32, fill : 0xFFFFFF});
+    sizeSceneText[4] = new PIXI.Text(`8 * 8 *`,{fontFamily : 'Arial', fontSize: 32, fill : 0xFFFFFF});
+    sizeSceneText[5] = new PIXI.Text(`* beta version, has\nproblem with some\n animations`,{fontFamily : 'Arial', fontSize: 32, fill : 0xFFFFFF});
+    sizeSceneText[5].x = config.width * 0.1 - 100;
+    sizeSceneText[5].y = config.height * 0.73;
+    menu.stage.addChild(sizeSceneText[5]);
 
     sizeSceneText.forEach(el =>{
         el.alpha = 0;
