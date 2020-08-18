@@ -11,6 +11,7 @@ let restart = ['./img/restart.png'];
 let restartBtn;
 let soundBtn;
 let playerClick = 1;
+let isPlayerClick = false;
 let tempObj = {};
 let players = [];
 let container;
@@ -295,11 +296,14 @@ function update(){
                 deleteThree(); 
                 let tl = deadAnimation()
                 
-                fallAnimationUpdate(tl);
+                let spendTime = fallAnimationUpdate(tl);
                 fallObjs();
                 setTimeout(renderMapUpdate, 510);
                 
                 addScore();
+                setTimeout(()=>{
+                    isPlayerClick = false;
+                }, spendTime * 900);
                 
                 // let tempPlayersId = players.map(function(arr) {
                 //     return arr.map(el =>{
@@ -321,6 +325,7 @@ function initRestartBtn(){
     // restartBtn.on('pointerdown', startGame);
     restartBtn.on('pointerdown', ()=>{
         console.log("GAME OVER INIT TIME");
+        isPlayerClick = false;
         initChooseTime();
     });
     restartBtn.Animation = new TweenMax.to(restartBtn.scale, 1, {
@@ -467,10 +472,15 @@ function clickFunction(player){
                 if(isSoundPlay){
                     noGoodChoiceSound.play();
                 }
-            }       
+            }  
+            isPlayerClick = true;  
             break;
         }
         case 1:{
+            if(isPlayerClick){
+                return;
+            }
+
             playerClick++;
             tempObj = player;
             playerAnimation(tempObj);
@@ -914,6 +924,7 @@ function fallAnimation(iMinus, tempObj){
 }
 
 function fallAnimationUpdate(tl){
+    let spendTime = 0;
     for(let i = MAP_SIZE - 2; i >= 0; i--){
         for(let j = 0; j < MAP_SIZE; j++){
             let fallTiles = freeSpaceBelow(i, j);
@@ -942,9 +953,11 @@ function fallAnimationUpdate(tl){
                     y: players[i][j].y + fallTiles * 70,//70px = размер картинки + отступ  
                     ease: "power2.inOut",
                 }); 
+                spendTime += 0.5;
             }
         }
     }
+    return spendTime;
 }
 
 function freeSpaceBelow(row, col){
