@@ -267,7 +267,8 @@ function startGame(){
 
     //soundBtn
     initSoundBtn();
-    
+
+    players = []; //reset players
     //createMap
     createMap(players, colors); 
     
