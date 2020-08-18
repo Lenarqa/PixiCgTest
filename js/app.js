@@ -295,9 +295,9 @@ function update(){
             setTimeout(()=>{
                 console.log("Три на карте!");
                 deleteThree(); 
-                let tl = deadAnimation()
+                deadAnimation();
                 
-                let spendTime = fallAnimationUpdate(tl);
+                setTimeout(fallAnimationUpdate, 300);
                 fallObjs();
                 setTimeout(renderMapUpdate, 510);
                 
@@ -924,8 +924,7 @@ function fallAnimation(iMinus, tempObj){
     }
 }
 
-function fallAnimationUpdate(tl){
-    let spendTime = 0;
+function fallAnimationUpdate(){
     for(let i = MAP_SIZE - 2; i >= 0; i--){
         for(let j = 0; j < MAP_SIZE; j++){
             let fallTiles = freeSpaceBelow(i, j);
@@ -954,11 +953,9 @@ function fallAnimationUpdate(tl){
                     y: players[i][j].y + fallTiles * 70,//70px = размер картинки + отступ  
                     ease: "power2.inOut",
                 }); 
-                spendTime += 0.3;
             }
         }
     }
-    return spendTime;
 }
 
 function freeSpaceBelow(row, col){
@@ -984,19 +981,10 @@ function deadAnimation(){
                     x: 0.0,
                     y: 0.0,
                     ease: Power3.easeOut, 
-               }, 0.05); 
-                // gsap.to(players[i][j].scale, {
-                //     delay: 0.1,
-                //     duration: 0.2,
-                //     x: 0.0,
-                //     y: 0.0,
-                //     ease: Power3.easeOut
-                // });
+               }, 0.05);
             }
         }
     }
-    return tl;
-    // console.log(players[0][0].parent.classList)
 }
 
 function playAnimationMove(tempObj, player){
