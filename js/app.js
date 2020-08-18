@@ -301,10 +301,6 @@ function update(){
                 setTimeout(renderMapUpdate, 510);
                 
                 addScore();
-                setTimeout(()=>{
-                    isPlayerClick = false;
-                }, spendTime * 900);
-                
                 // let tempPlayersId = players.map(function(arr) {
                 //     return arr.map(el =>{
                 //         return el.id;
@@ -312,6 +308,8 @@ function update(){
                 // });
                 // console.log(tempPlayersId);
            })
+        }else{
+            isPlayerClick = false;
         }
     }, 1300);
 }
@@ -463,6 +461,8 @@ function clickFunction(player){
                 if(isSoundPlay){
                     goodChoiceSound.play();
                 }
+
+                isPlayerClick = true; 
             }else{
                 if(!isNear(tempObj, player)){
                     killPlayerAnimation(tempObj);
@@ -473,7 +473,7 @@ function clickFunction(player){
                     noGoodChoiceSound.play();
                 }
             }  
-            isPlayerClick = true;  
+
             break;
         }
         case 1:{
@@ -953,7 +953,7 @@ function fallAnimationUpdate(tl){
                     y: players[i][j].y + fallTiles * 70,//70px = размер картинки + отступ  
                     ease: "power2.inOut",
                 }); 
-                spendTime += 0.5;
+                spendTime += 0.3;
             }
         }
     }
