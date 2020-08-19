@@ -882,7 +882,7 @@ function deadAnimation(){
                     x: 0.0,
                     y: 0.0,
                     ease: Power3.easeOut, 
-               }, 0.05);
+               }, 0.08);
             }
         }
     }
