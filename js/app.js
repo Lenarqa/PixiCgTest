@@ -302,12 +302,6 @@ function update(){
                 setTimeout(renderMapUpdate, 510);
                 
                 addScore();
-                // let tempPlayersId = players.map(function(arr) {
-                //     return arr.map(el =>{
-                //         return el.id;
-                //     });
-                // });
-                // console.log(tempPlayersId);
            })
         }else{
             isPlayerClick = false;
@@ -321,7 +315,6 @@ function initRestartBtn(){
     restartBtn.x = config.width * 0.45;
     restartBtn.y = config.height * 0.5;
     restartBtn.interactive = true;
-    // restartBtn.on('pointerdown', startGame);
     restartBtn.on('pointerdown', ()=>{
         console.log("GAME OVER INIT TIME");
         isPlayerClick = false;
@@ -452,12 +445,6 @@ function clickFunction(player){
                 changeIandJ(tempObj, player);
                 playAnimationMove(tempObj, player);
                 swapObject(tempObj, player);
-                // deleteThree();                
-                // deadAnimation(tempObj, player);
-                // fallAnimation(iMinus, tempObj);
-                // fallObjs();
-                // setTimeout(renderMap, 510);
-                // addScore();
                 
                 if(isSoundPlay){
                     goodChoiceSound.play();
@@ -514,47 +501,8 @@ function addScore(){
     app.stage.addChild(scoreText);
 }
 
-function renderMap(){    
-    console.log('render map')
-    let yPos = [40];
-    for (let z = 0; z < MAP_SIZE-1; z++) {
-        yPos.push(yPos[z] + 70);
-    }
-
-    for (let i = 0; i < MAP_SIZE; i++) {
-        for (let j = 0; j < MAP_SIZE; j++) {
-            if(players[i][j].id == 9){
-                players[i][j].x = 10 + j * 70;
-                players[i][j].y = yPos[i];
-                let random = Math.floor(Math.random() * colors.length);
-                if(j > 1){
-                    if(random == players[i][j-1].id && random == players[i][j-2].id){
-                        if(random < colors.length-1){
-                            random++;
-                        }else{
-                            random--;
-                        }
-                    }
-                }
-                players[i][j].id = random;
-                players[i][j].texture = PIXI.Texture.from(colors[random]);
-
-                players[i][j].Animation = new TweenMax.to(players[i][j].scale, 0.5, {
-                    x: 1.0, 
-                    y: 1.0, 
-                    ease: "power2.inOut",
-                    yoyo: true,
-                });
-            }else{
-                players[i][j].x = 10 + j * 70;
-                players[i][j].y = yPos[i];
-            } 
-        }
-    }
-}
-
 function renderMapUpdate(){    
-    console.log('render map')
+    // console.log('render map')
     let yPos = [40];
     for (let z = 0; z < MAP_SIZE-1; z++) {
         yPos.push(yPos[z] + 70);
@@ -582,7 +530,6 @@ function renderMapUpdate(){
                     x: 1.0, 
                     y: 1.0, 
                     ease: "power2.inOut",
-                    // yoyo: true,
                 });
                 gsap.from(players[i][j], 
                 {
@@ -600,12 +547,12 @@ function renderMapUpdate(){
         }
     }
 
-    let tempPlayersId = players.map(function(arr) {
-        return arr.map(el =>{
-            return el.id;
-        });
-    });
-    console.log(tempPlayersId);
+    // let tempPlayersId = players.map(function(arr) {
+    //     return arr.map(el =>{
+    //         return el.id;
+    //     });
+    // });
+    // console.log(tempPlayersId);
 }
 
 function sechNine(){
@@ -900,55 +847,11 @@ function initSound(){
 }
 
 // Animations
-function fallAnimation(iMinus, tempObj){
-    for(let i = MAP_SIZE - 2; i >= 0; i--){
-        for(let j = 0; j < MAP_SIZE; j++){
-            let fallTiles = freeSpaceBelow(i, j);
-            if(fallTiles > 0){
-                    if(iMinus != -1){
-                        players[i][j].Animation = new TweenMax.to(players[i][j], 0.33, {
-                            y: players[i][j].y + fallTiles * 70,//70px = размер картинки + отступ  
-                            ease: "power2.inOut",
-                    }); 
-                }else{
-                    if((players[i][j].i == tempObj.i) && (players[i][j].j == tempObj.j)){
-                        players[i][j].Animation = new TweenMax.to(players[i][j], 0.33, {
-                            y: players[i][j].y,//70px = размер картинки + отступ  
-                            ease: "power2.inOut",
-                        });
-                    }
-                }
-                
-            }
-        }
-    }
-}
-
 function fallAnimationUpdate(){
     for(let i = MAP_SIZE - 2; i >= 0; i--){
         for(let j = 0; j < MAP_SIZE; j++){
             let fallTiles = freeSpaceBelow(i, j);
-            // if(i == 1 && j == 1){
-            //     tl.to(players[i][j], 0.1,{delay: 0.2})   
-            // }
             if(fallTiles > 0){
-                // tl.staggerTo(players[i][j], 0.1,
-                // {
-                //     y: players[i][j].y, ease: "power2.inOut"
-                // });
-
-                // tl.staggerTo(players[i][j], 0.1,{
-                //         y: players[i][j].y + fallTiles * 70, alpha: 1, ease: "power2.inOut", duration: 0.5
-                //     }
-                // , 0.05);
-                // tl.staggerTo(players[i][j], 
-                //     {
-                //         y: players[i][j].y, ease: "power2.inOut"
-                //     }, 
-                //     {
-                //         y: players[i][j].y + fallTiles * 70, alpha: 1, ease: "power2.inOut", duration: 0.5
-                //     }
-                // );
                 gsap.to(players[i][j], 0.5, {
                     y: players[i][j].y + fallTiles * 70,//70px = размер картинки + отступ  
                     ease: "power2.inOut",
@@ -967,10 +870,6 @@ function freeSpaceBelow(row, col){
     }
     return result;
 }
-
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
 
 function deadAnimation(){
     let tl = new TimelineLite();
@@ -1185,6 +1084,5 @@ function killPlayerAnimation(player){
             ease: "power2.inOut",
             yoyo: true,
         });
-    }
-    
+    }   
 }
