@@ -297,9 +297,11 @@ function update(){
                 deleteThree(); 
                 deadAnimation();
                 
-                setTimeout(fallAnimationUpdate, 300);
-                fallObjs();
-                setTimeout(renderMapUpdate, 510);
+                setTimeout(()=>{
+                    fallAnimationUpdate();
+                    fallObjs();
+                    setTimeout(renderMapUpdate, 510);
+                }, 550);
                 
                 addScore();
            })
