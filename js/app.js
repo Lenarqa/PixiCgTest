@@ -293,7 +293,6 @@ function update(){
     updateInterval =  setInterval(()=>{
         if(isThreeUpdate()){
             setTimeout(()=>{
-                console.log("Три на карте!");
                 deleteThree(); 
                 deadAnimation();
                 
@@ -318,7 +317,6 @@ function initRestartBtn(){
     restartBtn.y = config.height * 0.5;
     restartBtn.interactive = true;
     restartBtn.on('pointerdown', ()=>{
-        console.log("GAME OVER INIT TIME");
         isPlayerClick = false;
         initChooseTime();
     });
@@ -919,7 +917,6 @@ function playAnimationMove(tempObj, player){
         });
 
     }else if((tempObj.i - player.i) == 1){
-        console.log("TOP")
         player.Animation = new TweenMax.to(player, 0.5, {
             y: tempObjLastY, 
             ease: Power3.easeOut
@@ -931,8 +928,6 @@ function playAnimationMove(tempObj, player){
             ease: Power3.easeOut
         });
     }else if((tempObj.i - player.i) == -1){
-        console.log("BOTTOM")
-        // killPlayerAnimation(player);
         player.Animation = new TweenMax.to(player, 0.5, {
             y: tempObjLastY, 
             ease: Power3.easeOut
