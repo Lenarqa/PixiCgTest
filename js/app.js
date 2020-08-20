@@ -299,20 +299,22 @@ function startGame(){
 }
 
 function update(){
-    updateInterval =  setInterval(()=>{
+    updateInterval = setInterval(()=>{
         if(isThreeUpdate()){
             setTimeout(()=>{
-                deleteThree(); 
-                deadAnimation();
+                setTimeout(()=>{
+                    deleteThree(); 
+                    deadAnimation();
+                }, 500); //400
                 
                 setTimeout(()=>{
                     fallAnimationUpdate();
                     fallObjs();
                     setTimeout(renderMapUpdate, 510);
-                }, 550);
+                }, 550); //550
                 
                 addScore();
-           }, 500)
+           }, 500) //500
         }else{
             isPlayerClick = false;
         }
@@ -902,7 +904,7 @@ function deadAnimation(){
                     x: 0.0,
                     y: 0.0,
                     ease: Power3.easeOut, 
-               }, 0.08);
+               }, 0.05);
             }
         }
     }
