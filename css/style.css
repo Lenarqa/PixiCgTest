@@ -4,14 +4,14 @@
     padding: 0;
 }
 
-#container{
+/* #container{
     display: flex;
     height: 100vh;
     justify-content: center;
     align-items: center;
     max-width: 1270px;
     margin: 0 auto;
-}
+} */
 
 .todo{
     margin-top: 2rem;

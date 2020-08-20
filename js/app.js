@@ -1,8 +1,11 @@
+let playerHeigth = window.innerHeight;
+let playerWidth = window.innerWidth;
+
 //configs
 let config
 let MAP_SIZE = 6;
-let MAP_WIDTH = 410;
-let MAP_HEIGHT = 450;
+let MAP_WIDTH = playerWidth;
+let MAP_HEIGHT = playerHeigth;
 let app;
 let menu;
 let colors = ['./img/beer.png', './img/coffee.png', './img/martini.png', './img/coffee-mug.png', './img/teapot.png'];
@@ -37,8 +40,8 @@ window.onload = function(){
 function initChooseTime(){
     container = document.getElementById('container');
     config = {
-        width: 410,//6 * 6
-        height: 450,//6 * 6
+        width: playerWidth,
+        height: playerHeigth,
         backgroundColor: 0x131317,
     }
 
@@ -54,7 +57,8 @@ function initChooseTime(){
 
     let timeSceneText = [];
     timeSceneText[0] = new PIXI.Sprite.from('./img/chooseTime.png');
-    timeSceneText[0].x = config.width * 0.45;
+    timeSceneText[0].anchor.set(0.5);
+    timeSceneText[0].x = config.width / 2;
     timeSceneText[0].y = config.height * 0.2;
     timeSceneText[0].Animation = new TweenMax.to(timeSceneText[0].scale, 1, {
         x: 1.3, 
@@ -66,13 +70,15 @@ function initChooseTime(){
     });
     menu.stage.addChild(timeSceneText[0]);
 
-    timeSceneText[1] = new PIXI.Text(`Choose game time\n(seconds)`,{fontFamily : 'Arial', fontSize: 32, fill : 0xFFFFFF, align: 'center'});
-    timeSceneText[1].x = config.width * 0.2;
+    timeSceneText[1] = new PIXI.Text(`Choose game time\n(seconds)`,{fontFamily : 'Arial', fontSize: '2rem', fill : 0xFFFFFF, align: 'center'});
+    timeSceneText[1].anchor.set(0.5);
+    timeSceneText[1].x = config.width / 2;
     timeSceneText[1].y = config.height * 0.35;
     menu.stage.addChild(timeSceneText[1]);
 
-    timeSceneText[2] = new PIXI.Text(`30`,{fontFamily : 'Arial', fontSize: 32, fill : 0xFFFFFF});
-    timeSceneText[2].x = config.width * 0.46;
+    timeSceneText[2] = new PIXI.Text(`30`,{fontFamily : 'Arial', fontSize: '2rem', fill : 0xFFFFFF});
+    timeSceneText[2].anchor.set(0.5);
+    timeSceneText[2].x = config.width / 2;
     timeSceneText[2].y = config.height * 0.53;
     timeSceneText[2].interactive = true;
     timeSceneText[2].on('pointerdown', ()=>{
@@ -88,8 +94,9 @@ function initChooseTime(){
     });
     menu.stage.addChild(timeSceneText[2]);
 
-    timeSceneText[3] = new PIXI.Text(`60`,{fontFamily : 'Arial', fontSize: 32, fill : 0xFFFFFF});
-    timeSceneText[3].x = config.width * 0.46;
+    timeSceneText[3] = new PIXI.Text(`60`,{fontFamily : 'Arial', fontSize: '2rem', fill : 0xFFFFFF});
+    timeSceneText[3].anchor.set(0.5);
+    timeSceneText[3].x = config.width / 2;
     timeSceneText[3].y = config.height * 0.63;
     timeSceneText[3].interactive = true;
     timeSceneText[3].on('pointerdown', ()=>{
@@ -105,8 +112,9 @@ function initChooseTime(){
     });
     menu.stage.addChild(timeSceneText[3]);
 
-    timeSceneText[4] = new PIXI.Text(`120`,{fontFamily : 'Arial', fontSize: 32, fill : 0xFFFFFF});
-    timeSceneText[4].x = config.width * 0.44;
+    timeSceneText[4] = new PIXI.Text(`120`,{fontFamily : 'Arial', fontSize: '2rem', fill : 0xFFFFFF});
+    timeSceneText[4].anchor.set(0.5);
+    timeSceneText[4].x = config.width / 2;
     timeSceneText[4].y = config.height * 0.73;
     timeSceneText[4].interactive = true;
     timeSceneText[4].on('pointerdown', ()=>{
@@ -138,20 +146,17 @@ function clearInitChooseTime(timeSceneText){
 function initChooseGameSize(){
     let sizeSceneText = [];
     sizeSceneText[0] = new PIXI.Sprite.from('./img/mapSize.png');
-    sizeSceneText[1] = new PIXI.Text(`Choose game map size`,{fontFamily : 'Arial', fontSize: 32, fill : 0xFFFFFF, align: 'center'});
-    sizeSceneText[2] = new PIXI.Text(`6 * 6`,{fontFamily : 'Arial', fontSize: 32, fill : 0xFFFFFF});
-    sizeSceneText[3] = new PIXI.Text(`7 * 7`,{fontFamily : 'Arial', fontSize: 32, fill : 0xFFFFFF});
-    sizeSceneText[4] = new PIXI.Text(`8 * 8`,{fontFamily : 'Arial', fontSize: 32, fill : 0xFFFFFF});
-    // sizeSceneText[5] = new PIXI.Text(`* beta version, has\nproblem with some\n animations`,{fontFamily : 'Arial', fontSize: 32, fill : 0xFFFFFF});
-    // sizeSceneText[5].x = config.width * 0.1 - 100;
-    // sizeSceneText[5].y = config.height * 0.73;
-    // menu.stage.addChild(sizeSceneText[5]);
+    sizeSceneText[1] = new PIXI.Text(`Choose game map size`,{fontFamily : 'Arial', fontSize: '1.8rem', fill : 0xFFFFFF, align: 'center'});
+    sizeSceneText[2] = new PIXI.Text(`6 * 6`,{fontFamily : 'Arial', fontSize: '2rem', fill : 0xFFFFFF});
+    sizeSceneText[3] = new PIXI.Text(`7 * 7`,{fontFamily : 'Arial', fontSize: '2rem', fill : 0xFFFFFF});
+    sizeSceneText[4] = new PIXI.Text(`8 * 8`,{fontFamily : 'Arial', fontSize: '2rem', fill : 0xFFFFFF});
 
     sizeSceneText.forEach(el =>{
         el.alpha = 0;
     });
     
-    sizeSceneText[0].x = config.width * 0.45 - 100;
+    sizeSceneText[0].anchor.set(0.5);
+    sizeSceneText[0].x = config.width / 2 - 100;
     sizeSceneText[0].y = config.height * 0.2;
     sizeSceneText[0].Animation = new TweenMax.to(sizeSceneText[0].scale, 1, {
         x: 1.3, 
@@ -163,17 +168,19 @@ function initChooseGameSize(){
     });
     menu.stage.addChild(sizeSceneText[0]);
 
-    sizeSceneText[1].x = config.width * 0.1 - 100;
+    sizeSceneText[1].anchor.set(0.5);
+    sizeSceneText[1].x = config.width / 2 - 100;
     sizeSceneText[1].y = config.height * 0.35;
     menu.stage.addChild(sizeSceneText[1]);
 
-    sizeSceneText[2].x = config.width * 0.43 - 100;
+    sizeSceneText[2].anchor.set(0.5);
+    sizeSceneText[2].x = config.width / 2 - 100;
     sizeSceneText[2].y = config.height * 0.43;
     sizeSceneText[2].interactive = true;
     sizeSceneText[2].on('pointerdown', ()=>{
         MAP_SIZE = 6;
-        MAP_WIDTH = 410;
-        MAP_HEIGHT = 450;
+        // MAP_WIDTH = 410;
+        // MAP_HEIGHT = 450;
         sizeSceneText[2].Animation = new TweenMax.to(sizeSceneText[2], 0.7, {
             x: sizeSceneText[2].x + 100, 
             alpha: 0,
@@ -186,13 +193,14 @@ function initChooseGameSize(){
     });
     menu.stage.addChild(sizeSceneText[2]);
 
-    sizeSceneText[3].x = config.width * 0.43 - 100;
+    sizeSceneText[3].anchor.set(0.5);
+    sizeSceneText[3].x = config.width / 2 - 100;
     sizeSceneText[3].y = config.height * 0.53;
     sizeSceneText[3].interactive = true;
     sizeSceneText[3].on('pointerdown', ()=>{
         MAP_SIZE = 7;
-        MAP_WIDTH = 480;
-        MAP_HEIGHT = 520;
+        // MAP_WIDTH = 480;
+        // MAP_HEIGHT = 520;
         sizeSceneText[3].Animation = new TweenMax.to(sizeSceneText[3], 0.7, {
             x: sizeSceneText[3].x + 100, 
             alpha: 0,
@@ -204,13 +212,14 @@ function initChooseGameSize(){
     });
     menu.stage.addChild(sizeSceneText[3]);
 
-    sizeSceneText[4].x = config.width * 0.43 - 100;
+    sizeSceneText[4].anchor.set(0.5);
+    sizeSceneText[4].x = config.width / 2 - 100;
     sizeSceneText[4].y = config.height * 0.63;
     sizeSceneText[4].interactive = true;
     sizeSceneText[4].on('pointerdown', ()=>{
         MAP_SIZE = 8;
-        MAP_WIDTH = 550;
-        MAP_HEIGHT = 590;
+        // MAP_WIDTH = 550;
+        // MAP_HEIGHT = 590;
         sizeSceneText[4].Animation = new TweenMax.to(sizeSceneText[4], 0.7, {
             x: sizeSceneText[4].x + 100, 
             alpha: 0,
@@ -303,18 +312,19 @@ function update(){
                 }, 550);
                 
                 addScore();
-           })
+           }, 500)
         }else{
             isPlayerClick = false;
         }
-    }, 1300);
+    }, 1200);
 }
 
 
 function initRestartBtn(){
     restartBtn = new PIXI.Sprite.from(restart[0]);
-    restartBtn.x = config.width * 0.45;
-    restartBtn.y = config.height * 0.5;
+    restartBtn.anchor.set(0.5, 0.5);
+    restartBtn.x = playerWidth / 2;
+    restartBtn.y = playerHeigth / 2;
     restartBtn.interactive = true;
     restartBtn.on('pointerdown', ()=>{
         isPlayerClick = false;
@@ -363,8 +373,8 @@ function gameOver(){
     scoreText.text = `Final score:\n ${score}`;
     scoreText.style = {fontFamily : 'Arial', fontSize: 42, fill : 0xFFFFFF, align : 'center'};
     scoreText.Animation = new TweenMax.to(scoreText, 1, {
-        x: config.width * 0.5 - 110,
-        y: config.height * 0.25, 
+        x: playerWidth / 2,
+        y: playerHeigth / 4, 
         ease: Power3.easeOut,
     });
 
@@ -384,21 +394,25 @@ function startTimer(){
 
 function initTimerText(){
     timerText = new PIXI.Text(`${time}`,{fontFamily : 'Arial', fontSize: 24, fill : 0xFFFFFF});
-    timerText.x = config.width * 0.8;
-    timerText.y = 10
+    timerText.anchor.set(0.5);
+    timerText.x = playerWidth * 0.65;
+    timerText.y = playerHeigth / 20;
     app.stage.addChild(timerText);
 }
 
 function initScore(){
     scoreText = new PIXI.Text('0',{fontFamily : 'Arial', fontSize: 24, fill : 0xFFFFFF, align : 'center'});
-    scoreText.x = config.width * 0.45;
-    scoreText.y = 10
+    scoreText.anchor.set(0.5);
+    scoreText.x = playerWidth / 2;
+    scoreText.y = playerHeigth / 20;
     app.stage.addChild(scoreText);
 }
 
 function createMap(players){
-    let x = 10;
-    let y = 40;
+    // let x = 10;
+    // let y = 40;
+    let x = (playerWidth / 2) - (MAP_SIZE / 2 * 65);
+    let y = playerHeigth / 5;
 
     for (let i = 0; i < MAP_SIZE; i++) {
 
@@ -407,6 +421,8 @@ function createMap(players){
 
             let random = Math.floor(Math.random() * colors.length); 
             players[i][j] = new PIXI.Sprite.from(colors[random]);
+            // players[i][j].scale.x = 2;
+            // players[i][j].scale.y = 2;
             players[i][j].interactive = true;
             players[i][j].x = x;
             players[i][j].y = y;
@@ -415,6 +431,7 @@ function createMap(players){
             players[i][j].id = random;
             players[i][j].Animation = null;
             
+            
             players[i][j].on('pointerdown', clickFunction.bind(this, players[i][j]));
             
             x += 70;
@@ -422,7 +439,7 @@ function createMap(players){
             app.stage.addChild(players[i][j]);
         }
         y += 70;
-        x  = 10;
+        x  = (playerWidth / 2) - (MAP_SIZE / 2 * 65);
     }
 
     analizHorizontalMap();
@@ -503,7 +520,9 @@ function addScore(){
 
 function renderMapUpdate(){    
     // console.log('render map')
-    let yPos = [40];
+    let yPos = [playerHeigth / 5];
+    // let x = (playerWidth / 2) - (MAP_SIZE / 2 * 65);
+    // let y = playerHeigth / 5;
     for (let z = 0; z < MAP_SIZE-1; z++) {
         yPos.push(yPos[z] + 70);
     }
@@ -511,7 +530,8 @@ function renderMapUpdate(){
     for (let i = 0; i < MAP_SIZE; i++) {
         for (let j = 0; j < MAP_SIZE; j++) {
             if(players[i][j].id == 9){
-                players[i][j].x = 10 + j * 70;
+                // players[i][j].x = 10 + j * 70;
+                players[i][j].x = (playerWidth / 2) - (MAP_SIZE / 2 * 65) + j * 70;
                 players[i][j].y = yPos[i];
                 let random = Math.floor(Math.random() * colors.length);
                 if(j > 1){
@@ -539,7 +559,8 @@ function renderMapUpdate(){
                     y: players[i][j].y, alpha: 1, ease: "power2.inOut", duration: 0.5
                 })
             }else{
-                players[i][j].x = 10 + j * 70;
+                // players[i][j].x = 10 + j * 70;
+                players[i][j].x = (playerWidth / 2) - (MAP_SIZE / 2 * 65) + j * 70;
                 players[i][j].y = yPos[i];
                 players[i][j].alpha = 1;
                 players[i][j].texture = PIXI.Texture.from(colors[players[i][j].id]);
@@ -799,8 +820,9 @@ function analizVerticalMap(){
 function initSoundBtn(){
     
     soundBtn = new PIXI.Sprite.from(onOrDisable[1]);
-    soundBtn.x = config.width * 0.03;
-    soundBtn.y = 1;
+    soundBtn.anchor.set(0.5);
+    soundBtn.x = playerWidth * 0.35;
+    soundBtn.y = playerHeigth / 20;
     soundBtn.on('pointerdown', soundOfforOn);
     soundBtn.interactive = true;
     app.stage.addChild(soundBtn);
