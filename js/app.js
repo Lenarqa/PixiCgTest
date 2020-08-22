@@ -299,12 +299,13 @@ function startGame(){
 }
 
 function update(){
-    updateInterval = setInterval(()=>{
+    updateInterval = setInterval(()=>{  
         if(isThreeUpdate()){
             setTimeout(()=>{
                 setTimeout(()=>{
                     deleteThree(); 
                     deadAnimation();
+                    
                 }, 500); //400
                 
                 setTimeout(()=>{
@@ -312,9 +313,8 @@ function update(){
                     fallObjs();
                     setTimeout(renderMapUpdate, 510);
                 }, 550); //550
-                
-                addScore();
            }, 500) //500
+           addScore();
         }else{
             isPlayerClick = false;
         }
@@ -498,26 +498,15 @@ function clickFunction(player){
 
 function addScore(){
     scoreText.text = (parseInt(scoreText.text) + 100).toString();
-    let lastX = scoreText.x
-    scoreText.Animation =  new TweenMax.to(scoreText.scale, 0.3, {
+    scoreText.Animation =  gsap.to(scoreText.scale, 0.3, {
         x: 1.3,
         y: 1.3, 
         rotation: 0.45, 
         repeatDelay: 0.05,
+        yoyo: true,
+        repeat: 1,
         ease: "power2.inOut",
     });
-
-    setTimeout(()=>{
-        scoreText.Animation =  new TweenMax.to(scoreText.scale, 0.3, {
-            x: 1, 
-            y: 1.0, 
-            rotation: 0,
-            repeatDelay: 0.05,
-            ease: "power2.inOut",
-        });
-    }, 200)
-    
-    app.stage.addChild(scoreText);
 }
 
 function renderMapUpdate(){    
@@ -578,24 +567,24 @@ function renderMapUpdate(){
     // console.log(tempPlayersId);
 }
 
-function sechNine(){
-    let yPos = [10];
-    for (let z = 0; z < MAP_SIZE-1; z++) {
-        yPos.push(yPos[z] + 70);
-    }
-    console.log(yPos);
-    for (let i = 0; i < MAP_SIZE; i++) {
-        for (let j = 0; j < MAP_SIZE; j++) {
-            if(players[i][j].id == 9){
-                players[i][j].x = 10 + j * 70;
-                players[i][j].y = yPos[i];
-                let random = Math.floor(Math.random() * colors.length); 
-                players[0][j].id = random;
-                players[0][j].texture = PIXI.Texture.from(colors[random]);
-            }   
-        }
-    }
-}
+// function sechNine(){
+//     let yPos = [10];
+//     for (let z = 0; z < MAP_SIZE-1; z++) {
+//         yPos.push(yPos[z] + 70);
+//     }
+//     console.log(yPos);
+//     for (let i = 0; i < MAP_SIZE; i++) {
+//         for (let j = 0; j < MAP_SIZE; j++) {
+//             if(players[i][j].id == 9){
+//                 players[i][j].x = 10 + j * 70;
+//                 players[i][j].y = yPos[i];
+//                 let random = Math.floor(Math.random() * colors.length); 
+//                 players[0][j].id = random;
+//                 players[0][j].texture = PIXI.Texture.from(colors[random]);
+//             }   
+//         }
+//     }
+// }
 
 function fallObjs(){
     let pos = players.length - 1;
