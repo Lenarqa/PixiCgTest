@@ -314,7 +314,7 @@ function update(){
                     setTimeout(renderMapUpdate, 510);
                 }, 550); //550
            }, 500) //500
-           addScore();
+        //    addScore();
         }else{
             isPlayerClick = false;
         }
@@ -497,7 +497,7 @@ function clickFunction(player){
 }
 
 function addScore(){
-    scoreText.text = (parseInt(scoreText.text) + 100).toString();
+    scoreText.text = (parseInt(scoreText.text) + 25).toString();
     scoreText.Animation =  gsap.to(scoreText.scale, 0.3, {
         x: 1.3,
         y: 1.3, 
@@ -889,6 +889,7 @@ function deadAnimation(){
     for (let i = 0; i < MAP_SIZE; i++) {
         for (let j = 0; j < MAP_SIZE; j++) {
             if(players[i][j].id == 9 ){
+                addScore();
                 tl.staggerTo(players[i][j].scale, 0.1, {
                     x: 0.0,
                     y: 0.0,
