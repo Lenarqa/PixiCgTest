@@ -24,6 +24,7 @@ let updateInterval;
 
 //Text
 let scoreText;
+let lastScoreText;
 let timerText;
 
 // sounds
@@ -304,9 +305,8 @@ function update(){
             setTimeout(()=>{
                 setTimeout(()=>{
                     deleteThree(); 
-                    deadAnimation();
-                    
-                }, 500); //400
+                    deadAnimation(); 
+                }, 550); //400 //500
                 
                 setTimeout(()=>{
                     fallAnimationUpdate();
@@ -314,11 +314,10 @@ function update(){
                     setTimeout(renderMapUpdate, 510);
                 }, 550); //550
            }, 500) //500
-        //    addScore();
         }else{
             isPlayerClick = false;
         }
-    }, 1200);
+    }, 1300);//1200
 }
 
 
@@ -372,7 +371,11 @@ function gameOver(){
     }, 100);
     
     let score = parseInt(scoreText.text);
-    scoreText.text = `Final score:\n ${score}`;
+    if(scoreText.text == NaN){
+        scoreText.text = `Final score:\n ${lastScoreText}`;
+    }else{
+        scoreText.text = `Final score:\n ${score}`;
+    }
     scoreText.style = {fontFamily : 'Arial', fontSize: 42, fill : 0xFFFFFF, align : 'center'};
     scoreText.Animation = new TweenMax.to(scoreText, 1, {
         x: playerWidth / 2,
@@ -497,6 +500,12 @@ function clickFunction(player){
 }
 
 function addScore(){
+    if(scoreText.text == NaN){
+        scoreText.text = `Final score:\n ${lastScoreText}`;
+        return;
+    }
+
+    lastScoreText = scoreText.text;
     scoreText.text = (parseInt(scoreText.text) + 25).toString();
     scoreText.Animation =  gsap.to(scoreText.scale, 0.3, {
         x: 1.3,
@@ -566,25 +575,6 @@ function renderMapUpdate(){
     // });
     // console.log(tempPlayersId);
 }
-
-// function sechNine(){
-//     let yPos = [10];
-//     for (let z = 0; z < MAP_SIZE-1; z++) {
-//         yPos.push(yPos[z] + 70);
-//     }
-//     console.log(yPos);
-//     for (let i = 0; i < MAP_SIZE; i++) {
-//         for (let j = 0; j < MAP_SIZE; j++) {
-//             if(players[i][j].id == 9){
-//                 players[i][j].x = 10 + j * 70;
-//                 players[i][j].y = yPos[i];
-//                 let random = Math.floor(Math.random() * colors.length); 
-//                 players[0][j].id = random;
-//                 players[0][j].texture = PIXI.Texture.from(colors[random]);
-//             }   
-//         }
-//     }
-// }
 
 function fallObjs(){
     let pos = players.length - 1;
