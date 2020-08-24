@@ -352,6 +352,7 @@ function gameOver(){
         }, 2700);
     }
 
+
     players.forEach(arr =>{
         arr.forEach(el =>{
             el.Animation = new TweenMax.to(el.scale, 0.3, {
@@ -371,7 +372,7 @@ function gameOver(){
     }, 100);
     
     let score = parseInt(scoreText.text);
-    if(scoreText.text == NaN){
+    if(scoreText == NaN){
         scoreText.text = `Final score:\n ${lastScoreText}`;
     }else{
         scoreText.text = `Final score:\n ${score}`;
@@ -382,6 +383,16 @@ function gameOver(){
         y: playerHeigth / 4, 
         ease: Power3.easeOut,
     });
+
+    setTimeout(()=>{
+        players.forEach(arr =>{
+            arr.forEach(el =>{
+                el.scale.x = 0;
+                el.scale.y = 0;
+            })
+        });
+    }, 1000)
+    
 
     initRestartBtn();
 }
@@ -500,22 +511,25 @@ function clickFunction(player){
 }
 
 function addScore(){
-    if(scoreText.text == NaN){
+    if(scoreText == NaN){
+        console.log("NaN addScore");
         scoreText.text = `Final score:\n ${lastScoreText}`;
         return;
     }
 
     lastScoreText = scoreText.text;
-    scoreText.text = (parseInt(scoreText.text) + 25).toString();
-    scoreText.Animation =  gsap.to(scoreText.scale, 0.3, {
-        x: 1.3,
-        y: 1.3, 
-        rotation: 0.45, 
-        repeatDelay: 0.05,
-        yoyo: true,
-        repeat: 1,
-        ease: "power2.inOut",
-    });
+    if(parseInt(timerText.text) > 0){
+        scoreText.text = (parseInt(scoreText.text) + 25).toString();
+        scoreText.Animation =  gsap.to(scoreText.scale, 0.3, {
+            x: 1.3,
+            y: 1.3, 
+            rotation: 0.45, 
+            repeatDelay: 0.05,
+            yoyo: true,
+            repeat: 1,
+            ease: "power2.inOut",
+        });
+    }
 }
 
 function renderMapUpdate(){    
@@ -851,17 +865,19 @@ function initSound(){
 
 // Animations
 function fallAnimationUpdate(){
-    for(let i = MAP_SIZE - 2; i >= 0; i--){
-        for(let j = 0; j < MAP_SIZE; j++){
-            let fallTiles = freeSpaceBelow(i, j);
-            if(fallTiles > 0){
-                gsap.to(players[i][j], 0.5, {
-                    y: players[i][j].y + fallTiles * 70,//70px = размер картинки + отступ  
-                    ease: "power2.inOut",
-                }); 
+    if(parseInt(timerText.text) > 0){
+        for(let i = MAP_SIZE - 2; i >= 0; i--){
+            for(let j = 0; j < MAP_SIZE; j++){
+                let fallTiles = freeSpaceBelow(i, j);
+                if(fallTiles > 0){
+                    gsap.to(players[i][j], 0.5, {
+                        y: players[i][j].y + fallTiles * 70,//70px = размер картинки + отступ  
+                        ease: "power2.inOut",
+                    }); 
+                }
             }
         }
-    }
+    }  
 }
 
 function freeSpaceBelow(row, col){
